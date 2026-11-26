@@ -1,0 +1,1779 @@
+/* ======================================================================
+   NISSAN PATROL TOUCHSCREEN — STYLESHEET INDEX
+   ----------------------------------------------------------------------
+   Search terms to find the current feature (later rules override earlier):
+   - #kioskStage            : fixed 1920 x 1080 design canvas
+   - #mapContainer / #mapImage : interactive map and scaling
+   - #mapProgress           : Figma 52px counter and 17px label
+   - .new-generation-marker : locked/unlocked generation artwork
+   - .next-car-hint         : pulsing white glow on next eligible car
+   - #garageToggle          : collapsed My Garage button / live count
+   - #garagePanel           : expanded vertical garage / reward row
+   - #welcomeScreen         : Touch to Start
+   - #heritageScreen        : scrolling generation content / video
+   - #gameLobby             : four-corner multiplayer lobby
+   - #quizScreen            : Legacy Quiz
+   - #generationMatchScreen : Generation Match boards / central timer
+
+   Historical styling overrides are preserved to avoid visual regressions.
+   CSS still relies on assets/Fonts and some assets/Map resources supplied
+   separately by the existing working project.
+   ====================================================================== */
+
+
+/* ==============================
+   GLOBAL SETTINGS
+============================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+body {
+    background: #17120e;
+    font-family: Arial, sans-serif;
+}
+
+#app {
+    width: 100%;
+    height: 1080px;
+    height: 1080px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+/* ==============================
+   MAP VIEWPORT
+============================== */
+
+#mapViewport {
+    flex: 1;
+
+    min-width: 0;
+    min-height: 0;
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+/* ==============================
+   MAP CONTAINER
+============================== */
+
+#mapContainer {
+    position: relative;
+
+    flex: none;
+
+    overflow: hidden;
+
+    /* JavaScript sets actual image dimensions */
+    width: auto;
+    height: auto;
+}
+
+#mapImage {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: fill;
+
+    user-select: none;
+    pointer-events: none;
+}
+
+/* ==============================
+   HOTSPOT LAYER
+============================== */
+
+#hotspotLayer {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+}
+
+/* Individual buttons */
+
+.hotspot {
+    position: absolute;
+
+    width: 5.5%;
+    aspect-ratio: 1 / 1;
+
+    padding: 0;
+
+    transform: translate(-50%, -50%);
+
+    border: 2px solid #ffe7a0;
+    border-radius: 50%;
+
+    background: rgba(247, 196, 91, 0.15);
+
+    box-shadow:
+        0 0 0 5px rgba(247, 196, 91, 0.12),
+        0 2px 12px rgba(0, 0, 0, 0.5);
+
+    cursor: pointer;
+
+    pointer-events: auto;
+
+    transition: transform 0.2s, background 0.2s;
+}
+
+.hotspot:hover {
+    transform: translate(-50%, -50%) scale(1.15);
+    background: rgba(247, 196, 91, 0.45);
+}
+
+.hotspot.visited {
+    background: rgba(255, 215, 100, 0.6);
+    border-color: white;
+}
+
+.hotspot:focus-visible {
+    outline: 3px solid white;
+    outline-offset: 4px;
+}
+
+/* ==============================
+   MAP CONTROLS
+============================== */
+
+#mapControls {
+    flex: none;
+
+    min-height: 55px;
+
+    width: 100%;
+
+    padding: 8px 18px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: #21170f;
+    color: #ffe7ad;
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#progress {
+    color: #f5bd45;
+}
+
+#resetButton,
+.modal button {
+    padding: 9px 16px;
+
+    border: 1px solid #b88a43;
+    border-radius: 7px;
+
+    background: #5a381d;
+    color: #ffe8b4;
+
+    cursor: pointer;
+}
+
+/* ==============================
+   MODALS
+============================== */
+
+.modal {
+    display: none;
+
+    position: fixed;
+    z-index: 100;
+
+    inset: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.75);
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    width: min(420px, 100%);
+
+    padding: 30px;
+
+    text-align: center;
+
+    background: #ffe5ad;
+    color: #382313;
+
+    border: 3px solid #d6a044;
+    border-radius: 12px;
+}
+
+.modal-content button {
+    margin: 6px;
+}
+
+/* ==============================
+   SMALL SCREENS
+============================== */
+
+
+
+
+
+/* Progress overlays scale with the map, not the browser. */
+#mapContainer { container-type: inline-size; }
+#mapProgress {
+    position: absolute;
+    top: 2.05%;
+    right: 1.82%;
+    display: flex;
+    align-items: center;
+    gap: 1.45cqw;
+    color: #382313;
+    pointer-events: none;
+    line-height: 1;
+    z-index: 2;
+}
+#mapProgress #progress {
+    font-size: 2.82cqw;
+    font-weight: 700;
+    color: inherit;
+    font-variant-numeric: tabular-nums;
+}
+#progressLabel {
+    font-size: .91cqw;
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: .015em;
+}
+#garageProgress {
+    position: absolute;
+    left: 85.5%;
+    top: 93.84%;
+    font-size: .91cqw;
+    line-height: 1.1;
+    font-weight: 500;
+    color: #382313;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 2;
+}
+#mapContainer #resetButton {
+    position: absolute;
+    bottom: 8.8%;
+    left: 1.8%;
+    z-index: 3;
+    font-size: .7cqw;
+    padding: .45cqw .75cqw;
+    border-radius: .25cqw;
+}
+
+/* Original artwork, independently positioned at each state. */
+@font-face {
+    font-family: Manrope;
+    src: url('assets/Fonts/Manrope-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-display: swap;
+}
+.generation-marker { position:absolute; inset:0; pointer-events:none; }
+.generation-marker img { position:absolute; display:block; pointer-events:none; object-fit:fill; }
+.generation-banner, .car-border { transition: opacity .45s ease; }
+.generation-marker .unlocked { opacity:0; }
+.generation-marker.visited .unlocked { opacity:1; }
+.generation-marker.visited .locked { opacity:0; }
+.golden-hue { opacity:0; transition:opacity .65s ease; }
+.generation-marker.visited .golden-hue { opacity:1; }
+.generation-marker .car-image { object-fit:contain; transform:scaleX(-1); filter:grayscale(1) brightness(.23); transition:left .55s ease,top .55s ease,width .55s ease,height .55s ease,filter .55s ease; }
+.generation-marker.visited .car-image { filter:none; }
+/* 23.07px and 12.21px at the 1920px original map width. */
+.generation-label { position:absolute; color:#fff0d2; font-family:Manrope,Arial,sans-serif; font-weight:700; text-align:left; white-space:nowrap; line-height:1.12; pointer-events:none; transition:left .55s ease,top .55s ease; }
+.generation-label strong { display:block; font-size:1.2015625cqw; font-weight:700; }
+.generation-label small { display:block; font-size:.6359375cqw; font-weight:700; margin-top:.25cqw; }
+.marker-button { position:absolute; border:0; background:transparent; cursor:pointer; pointer-events:auto; padding:0; }
+.marker-button:focus-visible { outline:.18cqw solid white; border-radius:8%; }
+.game-hotspot { position:absolute; z-index:3; border:0; background:transparent; cursor:pointer; }
+.game-hotspot:focus-visible { outline:.2cqw solid white; }
+@media(prefers-reduced-motion:reduce) { .generation-marker * { transition:none !important; } }
+
+/* V6: reference-matched banner typography; independent of marker scaling. */
+.generation-label { color: #fff1d5; line-height: 1; font-synthesis: none; }
+.generation-label strong { line-height: 1; letter-spacing: 0; }
+.generation-label small { position: absolute; left: 0; top: var(--date-offset); margin: 0; line-height: 1; letter-spacing: 0; }
+
+/* V7: coordinated marker motion; V6 endpoint geometry and typography retained. */
+.generation-marker {
+    --unlock-duration: 750ms;
+    --unlock-ease: cubic-bezier(.4, 0, .2, 1);
+}
+.generation-marker .generation-banner,
+.generation-marker .car-border,
+.generation-marker .golden-hue,
+.generation-marker .car-image {
+    transition-property: left, top, width, height, opacity, filter;
+    transition-duration: var(--unlock-duration);
+    transition-timing-function: var(--unlock-ease);
+}
+.generation-marker .generation-label {
+    transition: left var(--unlock-duration) var(--unlock-ease),
+                top var(--unlock-duration) var(--unlock-ease),
+                width var(--unlock-duration) var(--unlock-ease),
+                height var(--unlock-duration) var(--unlock-ease);
+}
+.generation-marker .generation-label small {
+    transition: top var(--unlock-duration) var(--unlock-ease);
+}
+.generation-marker .marker-button {
+    transition: left var(--unlock-duration) var(--unlock-ease),
+                top var(--unlock-duration) var(--unlock-ease),
+                width var(--unlock-duration) var(--unlock-ease),
+                height var(--unlock-duration) var(--unlock-ease);
+}
+
+/* V9 — My Garage, anchored to the existing artwork. */
+#garageToggle {
+    position:absolute; left:81.9%; top:90.65%; width:16.3%; height:6.25%;
+    z-index:5; border:0; background:transparent; cursor:pointer; border-radius:.22cqw;
+}
+#garageToggle:focus-visible { outline:.16cqw solid #fff1d5; }
+.garage-arrow { position:absolute; right:6.65%; top:31%; width:7.8%; height:37%; background:#ffe4a8; border-radius:.12cqw; display:grid; place-items:center; }
+.garage-arrow::after { content:""; width:30%; aspect-ratio:1; border-left:.12cqw solid #382313; border-top:.12cqw solid #382313; transform:translateY(16%) rotate(45deg); transition:transform 250ms ease; }
+#garageToggle[aria-expanded="true"] .garage-arrow::after { transform:translateY(-16%) rotate(225deg); }
+#garagePanel {
+    position:absolute; right:1.82%; bottom:10%; width:33%; max-height:72%; overflow:auto;
+    z-index:10; padding:1.15cqw; border:.12cqw solid #f8d68c; border-radius:.5cqw;
+    background:linear-gradient(145deg,#fff0cc,#f1d19a); color:#382313;
+    font-family:Manrope,Arial,sans-serif; font-weight:700;
+    box-shadow:0 .5cqw 2cqw #38231355;
+    opacity:0; visibility:hidden; transform:translateY(.8cqw); pointer-events:none;
+    transition:opacity 250ms ease,transform 250ms ease,visibility 250ms;
+}
+#garagePanel.open { opacity:1; visibility:visible; transform:translateY(0); pointer-events:auto; }
+.garage-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:1cqw; }
+.garage-heading h2 { margin:0; font-size:1.15cqw; letter-spacing:.14em; }
+.garage-heading p { margin:.25cqw 0 .65cqw; font-size:.85cqw; }
+#garageClose { border:0; background:transparent; color:inherit; font-size:1.65cqw; line-height:1; cursor:pointer; padding:.2cqw; }
+.garage-meter { height:.32cqw; background:#bd935957; border-radius:1cqw; overflow:hidden; margin-bottom:.9cqw; }
+#garageMeterFill { display:block; height:100%; background:#ac762b; transition:width 350ms ease; }
+#garageEmpty { font-size:.9cqw; line-height:1.5; margin:1cqw 0; }
+#garageCollection { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.55cqw; }
+.garage-car { min-width:0; display:flex; flex-direction:column; align-items:center; padding:.55cqw .25cqw; border:.07cqw solid #d3aa67; border-radius:.3cqw; background:#fff4d680; text-align:center; }
+.garage-car img { width:100%; height:5.3cqw; object-fit:contain; transform:scaleX(-1); }
+.garage-car strong { font-size:.92cqw; line-height:1.2; }
+.garage-car small { font-size:.64cqw; line-height:1.5; }
+@media(prefers-reduced-motion:reduce) { #garagePanel, #garageMeterFill, .garage-arrow::after { transition:none; } }
+
+/* V10: welcome screen and availability overlays; V9 marker styling unchanged. */
+#welcomeScreen { position:fixed; inset:0; z-index:200; display:grid; place-items:center; background:linear-gradient(90deg,#21170ee8,#21170e80),url('assets/Map/BaseMap.png') center/cover no-repeat; color:#fff0ce; font-family:Manrope,Arial,sans-serif; text-align:center; }
+#welcomeScreen[hidden] { display:none; }
+.welcome-content { padding:57.6px; }
+.welcome-kicker { letter-spacing:.28em; font-size:clamp(14px,24.96px,28px); }
+.welcome-content h1 { font-size:clamp(44px,124.8px,130px); line-height:1; margin:.35em 0; }
+.welcome-content p { font-size:clamp(15px,26.88px,30px); }
+#touchToStart { margin-top:38.4px; font:700 clamp(18px,34.56px,36px) Manrope,Arial,sans-serif; color:#382313; background:#ffe3a8; border:2px solid #f7d38a; border-radius:8px; padding:1.2em 2.3em; cursor:pointer; box-shadow:0 0 35px #eec16a55; }
+#touchToStart:focus-visible { outline:3px solid white; outline-offset:5px; }
+.game-hotspot.coming-soon span { position:absolute; left:34%; top:54%; width:57%; height:34%; display:grid; place-items:center; background:#4c3928; color:#ffe0a3; font:700 .56cqw Manrope,Arial,sans-serif; letter-spacing:.06em; white-space:nowrap; }
+#finishActivity[hidden] { display:none !important; }
+
+/* V11 heritage prototype: isolated styling, map styles unchanged. */
+#heritageScreen[hidden]{display:none}
+#heritageScreen{position:fixed;inset:0;z-index:80;background:#21170f;color:#ffedcc;font-family:Manrope,Arial,sans-serif;display:flex;flex-direction:column;padding:clamp(16px,46.08px,48px);gap:38.4px;overflow:auto}
+.heritage-header{display:flex;justify-content:space-between;align-items:center;gap:1rem;font-size:clamp(12px,19.2px,20px);letter-spacing:.08em}
+.heritage-layout{display:grid;grid-template-columns:34% 1fr;gap:57.6px;flex:1;min-height:0}
+.heritage-side{border-right:1px solid #8d6a40;padding-right:38.4px;overflow:auto}
+.heritage-side h1{font-size:clamp(36px,96px,96px);margin:0;line-height:1.1}
+.heritage-side p{margin:.6em 0;font-size:clamp(14px,23.04px,24px)}
+#heritageCar{width:100%;height:clamp(100px,205.2px,250px);object-fit:contain}
+#heritageTabs{display:grid;gap:.45rem}
+#heritageScreen button{font:700 clamp(14px,22.08px,24px) Manrope,Arial,sans-serif;padding:.65em 1em;border:1px solid #bb9257;background:#4b3522;color:#ffedcc;border-radius:6px;min-height:48px;cursor:pointer}
+#heritageTabs button{text-align:left}
+#heritageTabs button[aria-current="step"],#heritageCollect:not(:disabled){background:#f5d18b;color:#382313}
+#heritageScreen button:disabled{opacity:.4;cursor:default}
+#heritageScreen button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.heritage-content{display:flex;flex-direction:column;min-width:0;overflow:auto;padding:19.2px 19.2px 19.2px 0}
+#heritageChapter{color:#e4bd7a;letter-spacing:.12em;font-size:clamp(12px,19.2px,20px)}
+#heritageTitle{font-size:clamp(28px,65.28px,66px);line-height:1.12;margin:.2em 0 .5em}
+#heritageBody{font-size:clamp(17px,31.68px,32px);line-height:1.55;flex:1}
+#heritageBody img{width:100%;max-height:378px;object-fit:contain}
+#heritageNotice{color:#e4bd7a;font-size:clamp(12px,17.28px,18px)}
+.heritage-actions{display:flex;flex-wrap:wrap;gap:.75em;justify-content:space-between;margin-top:1em}
+
+
+/* V12 — introduction and optional media, separate from the map. */
+.v12-overlay[hidden]{display:none!important}
+.v12-overlay{position:fixed;inset:0;z-index:85;display:grid;place-items:center;background:#17120eb8;color:#ffedcc;font-family:Manrope,Arial,sans-serif;padding:57.6px;overflow:auto}
+.v12-intro,.v12-video{position:relative;background:#39291d;border:2px solid #c9a56c;border-radius:16px;padding:clamp(20px,38.4px,40px);width:min(760px,1824px);max-height:1015.2px;overflow:auto;text-align:center}
+.v12-intro img{width:100%;height:259.2px;object-fit:contain}.v12-intro h1{font-size:clamp(32px,76.8px,70px);margin:.1em}.v12-intro h2{margin:.4em}.v12-intro p{line-height:1.5}.v12-overlay button{font:700 clamp(16px,21.12px,24px) Manrope,Arial,sans-serif;min-height:48px;border:1px solid #c9a56c;border-radius:7px;padding:.8em 1.2em;background:#4b3522;color:#ffedcc;cursor:pointer}.v12-close{position:absolute;top:12px;right:12px}.v12-buttons{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}.v12-intro #introExplore{background:#f5d18b;color:#382313}.v12-video{width:min(1200px,1804.8px)}.v12-video video{width:100%;max-height:756px;background:#000}.v12-gallery img{touch-action:pan-y;user-select:none;-webkit-user-drag:none}.v12-gallery{text-align:center}.v12-fact{padding:.6em .8em;border:1px solid #795b39;border-radius:8px;background:#39291d}.v12-gallery .v12-buttons button{font-size:clamp(12px,19.2px,20px)}
+
+/* V13: single continuous heritage story; existing map and video untouched. */
+#heritageScreen {overflow:hidden;gap:1.1rem;}
+#heritageScreen .heritage-header {flex:none;}
+.heritage-scroll {flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;overscroll-behavior:contain;scrollbar-color:#c9a56c #39291d;}
+.heritage-story {max-width:1320px;margin:0 auto;padding:0 clamp(16px,76.8px,76px) 12px;}
+.story-hero {display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:38.4px;padding:57.6px 0;}
+.story-hero h1 {font-size:clamp(48px,134.4px,120px);line-height:1;margin:.12em 0;}
+.story-hero img {width:100%;height:clamp(180px,345.6px,420px);object-fit:contain;}
+.story-kicker {color:#e4bd7a;text-transform:uppercase;letter-spacing:.12em;font-size:clamp(13px,19.2px,20px);}
+.heritage-story h2 {font-size:clamp(28px,57.6px,56px);line-height:1.15;margin:.25em 0 .6em;}
+.story-copy,.story-hero p,.story-end p,.story-specs {font-size:clamp(16px,27.84px,28px);line-height:1.6;}
+.story-section {padding:clamp(28px,76.8px,76px) 0;border-top:1px solid #795b39;}
+.story-photos {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,350px),1fr));gap:1.2rem;margin-top:1.5rem;}
+.story-photos figure {margin:0;background:#39291d;border:1px solid #795b39;border-radius:12px;overflow:hidden;aspect-ratio:16/10;display:grid;place-items:center;}
+.story-photos img {width:100%;height:100%;object-fit:contain;pointer-events:none;}
+.story-specs {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:.75rem;}
+.story-specs p {margin:0;padding:1em;background:#39291d;border:1px solid #795b39;border-radius:8px;}
+.story-end {text-align:center;border-top:1px solid #795b39;padding:2rem 0 1rem;}
+.story-end img {width:min(420px,90%);height:clamp(100px,194.4px,220px);object-fit:contain;}
+#heritageScreen #heritageCollect {min-width:min(300px,100%);background:#f5d18b;color:#382313;padding:1em 2em;}
+#introProgress:empty {display:none;}
+
+
+/* V14: clearly identify missing archive assets without changing map styling. */
+.story-photos figure.photo-unavailable{position:relative;}
+.story-photos .placeholder-label{position:absolute;bottom:0;left:0;right:0;padding:.6em;background:#21170fe6;color:#ffe2ad;font:700 clamp(12px,19.2px,18px) Manrope,Arial,sans-serif;text-align:center;}
+
+/* V15 — Collection completion. Scoped to avoid changing approved map artwork. */
+#garageReward { width:100%; margin-top:.8cqw; padding:.65em; border:1px solid #aa793c; border-radius:6px; background:#f5d18b; color:#382313; font:700 1cqw Manrope,Arial,sans-serif; cursor:pointer; }
+#garageReward[hidden] {display:none;}
+#rewardModal {z-index:110; background:#17120ed9; padding:38.4px; font-family:Manrope,Arial,sans-serif;}
+.reward-content {position:relative; isolation:isolate; width:min(1260px,1804.8px); max-height:1015.2px; overflow:auto; padding:clamp(16px,42.24px,42px); border:2px solid #dabb7b; border-radius:16px; background:radial-gradient(ellipse at 50% 0%,#896038 0%,#3e2b1d 52%,#251910 100%); color:#ffe9bd; box-shadow:0 12px 55px #0009; text-align:center;}
+.reward-heading {position:relative;}
+.reward-kicker {font-size:clamp(10px,19.2px,17px); letter-spacing:.18em; color:#e1bf83; margin:0;}
+.reward-count {font-size:clamp(23px,57.6px,52px); font-weight:700; color:#f5d18b; margin:.25em 0 0;}
+.reward-heading h2 {font-size:clamp(28px,65.28px,60px); margin:.05em 0; line-height:1.1;}
+.reward-heading>p:last-child {margin:.4em 0 1.1em; color:#e9cfaa;}
+#rewardCollection {display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:clamp(5px,19.2px,17px); position:relative;}
+#rewardCollection article {display:flex; flex-direction:column; align-items:center; justify-content:end; padding:.65em .25em; background:#f3deb51a; border:1px solid #dbb57566; border-radius:8px; min-width:0;}
+#rewardCollection img {width:100%; height:clamp(60px,153.6px,130px); object-fit:contain; filter:drop-shadow(0 4px 5px #0006);}
+#rewardCollection strong {font-size:clamp(11px,22.08px,20px); margin:.25em 0;}
+#rewardCollection small {font-size:clamp(9px,14.4px,14px); color:#e2c79a;}
+.reward-bottom {position:relative; display:flex; align-items:center; gap:clamp(12px,38.4px,36px); text-align:left; margin-top:clamp(16px,38.4px,36px); padding:clamp(12px,28.8px,28px); background:#22170f88; border:1px solid #c49b5a66; border-radius:10px;}
+.reward-qr {flex:none; width:clamp(94px,192px,150px); aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border:2px dashed #a17a42; background:#fff2d4; color:#594024; border-radius:5px; gap:.35em;}
+.reward-qr span {font-size:clamp(22px,57.6px,40px); font-weight:700;}
+.reward-qr small {font-size:clamp(9px,13.44px,12px); letter-spacing:.05em;}
+.reward-copy {flex:1;}
+.reward-copy h3 {margin:0 0 .3em; font-size:clamp(18px,34.56px,30px);}
+.reward-copy p {margin:.3em 0; font-size:clamp(12px,19.2px,17px);}
+.reward-pending {color:#dabd8d;}
+#closeReward {background:#f5d18b; color:#382313; font:700 clamp(14px,21.12px,20px) Manrope,Arial,sans-serif; min-height:48px; padding:.85em 1.25em; border:0; white-space:nowrap;}
+#rewardModal.celebrate .reward-content {animation:reward-arrive .65s cubic-bezier(.2,.8,.2,1) both;}
+#rewardModal.celebrate #rewardCollection article {animation:reward-car .55s ease-out both; animation-delay:calc(.12s + var(--i,0)*.075s);}
+#rewardCollection article:nth-child(2){--i:1}#rewardCollection article:nth-child(3){--i:2}#rewardCollection article:nth-child(4){--i:3}#rewardCollection article:nth-child(5){--i:4}#rewardCollection article:nth-child(6){--i:5}#rewardCollection article:nth-child(7){--i:6}
+.reward-sparks {position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:0; background:radial-gradient(circle at 12% 23%,#ffdf88 0 2px,transparent 3px),radial-gradient(circle at 83% 18%,#ffdf88 0 3px,transparent 4px),radial-gradient(circle at 22% 75%,#ffe4a3 0 2px,transparent 3px),radial-gradient(circle at 90% 70%,#ffe4a3 0 2px,transparent 3px),radial-gradient(ellipse at center,#ffc65a55,transparent 65%);}
+#rewardModal.celebrate .reward-sparks {animation:reward-glow 1.6s ease-out both;}
+@keyframes reward-arrive{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes reward-car{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes reward-glow{0%{opacity:0}45%{opacity:1}100%{opacity:0}}
+
+@media(prefers-reduced-motion:reduce){#rewardModal.celebrate .reward-content,#rewardModal.celebrate #rewardCollection article,#rewardModal.celebrate .reward-sparks{animation:none}}
+
+/* V15.2: One 1920 × 1080 design canvas for every screen. */
+html { font-size: 16px; }
+html, body { overscroll-behavior: none; touch-action: pan-x pan-y; }
+#kioskStage { position: fixed; left: 50%; top: 50%; width: 1920px; height: 1080px; transform: translate(-50%, -50%) scale(var(--stage-scale, 1)); transform-origin: center; overflow: hidden; touch-action: pan-x pan-y; }
+#app { width: 100%; height: 100%; }
+.heritage-scroll, .v12-intro, .v12-video, .reward-content { touch-action: pan-y; }
+
+/* V15.3: reserve the film geometry before metadata or native controls load. */
+#heritageVideoScreen { overflow: hidden; }
+#heritageVideoScreen .v12-video {
+    width: 1200px;
+    height: 860px;
+    max-height: none;
+    padding: 32px;
+    display: grid;
+    grid-template-rows: 52px 48px 636px 40px;
+    gap: 6px;
+    align-content: center;
+    justify-items: center;
+    overflow: hidden;
+    overflow-anchor: none;
+}
+#videoBack { justify-self: start; align-self: center; }
+#heritageVideoScreen h2 { margin: 0; line-height: 1.2; align-self: center; }
+#heritageVideoScreen #heritageVideo {
+    display: block;
+    width: 1130px;
+    height: 635.625px;
+    max-width: 100%;
+    max-height: none;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    background: #000;
+    align-self: center;
+    overflow-anchor: none;
+}
+#videoMessage { margin: 0; align-self: center; line-height: 1.3; }
+
+/* V16: four independent stations on the existing fixed kiosk canvas. */
+#gameLobby {position:absolute; inset:0; z-index:180; color:#ffe9bd; font-family:Manrope,Arial,sans-serif; background:radial-gradient(ellipse at center,#725039 0%,#352519 55%,#20160f 100%); overflow:hidden;}
+#gameLobby[hidden] {display:none;}
+#gameLobby button {font:700 22px Manrope,Arial,sans-serif; min-height:54px; border:1px solid #b38a52; border-radius:9px; color:#ffe9bd; background:#503622; padding:10px 20px; cursor:pointer; touch-action:manipulation;}
+#gameLobby button:disabled {opacity:.42; cursor:default;}
+#gameLobby button:focus-visible {outline:3px solid white;outline-offset:3px;}
+#gameLobby button[aria-pressed=true], #gameLobby .lobby-primary, #lobbyStart:not(:disabled) {background:#f5d18b;color:#302217;border-color:#f5d18b;}
+.lobby-seat {position:absolute; width:510px; height:264px; display:flex; flex-direction:column; justify-content:center; gap:13px; padding:23px 28px; background:#3c2b20; border:2px solid #94693e; border-radius:18px; transform:translate(-50%,-50%) rotate(var(--rotation)); transform-origin:center;}
+.lobby-seat[data-joined=true] {border-color:#d5af6d;}
+.lobby-seat[data-ready=true] {border-color:#f5d18b;box-shadow:0 0 28px #e6b95a30;}
+.lobby-seat[data-seat=0] {left:50%;top:85.4%;--rotation:0deg;}
+.lobby-seat[data-seat=1] {left:9.4%;top:50%;--rotation:90deg;}
+.lobby-seat[data-seat=2] {left:50%;top:14.6%;--rotation:180deg;}
+.lobby-seat[data-seat=3] {left:90.6%;top:50%;--rotation:-90deg;}
+.lobby-seat-header {display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.lobby-seat h2 {font-size:27px;margin:0;line-height:1.15;}
+.lobby-seat p {font-size:18px;margin:0;line-height:1.35; color:#e5c89e;}
+.lobby-seat .seat-state {font-size:16px;letter-spacing:.04em;text-transform:uppercase;}
+.lobby-seat .seat-row {display:flex;gap:10px;}
+.lobby-seat .seat-row button {flex:1; min-width:0;}
+.lobby-center {position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:830px;height:390px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.lobby-center h1 {font-size:52px;line-height:1.12;margin:0;}
+.lobby-center p {font-size:22px;margin:0;color:#ead1a9;}
+.lobby-center .lobby-kicker {font-size:16px;letter-spacing:.14em;color:#d6ab69;}
+#lobbyStatus {font-size:24px;font-weight:700; color:#f5d18b;}
+#lobbyStart, #lobbyBack {width:420px;}
+#gameLobby .lobby-ar {font-size:20px;}
+
+
+/* V16.1 — fixed corner stations. Top row faces the opposite long edge. */
+#gameLobby {background:linear-gradient(#25160970,#25160980),url("assets/Map/BaseMap.png") center/cover no-repeat;}
+/* Use the existing map as a temporary backdrop, obscuring its printed controls. */
+#gameLobby::before {content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,#8d5726e8,#3d2419e8);pointer-events:none;}
+.lobby-seat {width:650px;height:400px;padding:40px;gap:24px;background:linear-gradient(160deg,#613b1d,#382315);border:2px solid #e4bd7a;box-shadow:0 8px 30px #1c100b80;overflow:hidden;}
+.lobby-seat::before {content:"";position:absolute;inset:0 0 auto;height:12px;background:var(--seat-color);}
+.lobby-seat[data-seat="0"] {left:20%;top:75%;--rotation:0deg;--seat-color:#e7aa39;}
+.lobby-seat[data-seat="1"] {left:80%;top:75%;--rotation:0deg;--seat-color:#4aa7a2;}
+.lobby-seat[data-seat="2"] {left:20%;top:25%;--rotation:180deg;--seat-color:#929c4e;}
+.lobby-seat[data-seat="3"] {left:80%;top:25%;--rotation:180deg;--seat-color:#5689b7;}
+.lobby-seat h2 {font-size:40px;}
+.lobby-seat .seat-state {font-size:22px;}
+.lobby-seat .seat-row button {min-height:76px;font-size:26px;}
+.lobby-seat[data-ready="true"] {box-shadow:0 0 26px #ffe0a66b;border-color:#ffe5a1;}
+.lobby-center {width:440px;height:940px;border:2px solid #d6a969;border-radius:28px;padding:32px 24px;gap:22px;background:linear-gradient(155deg,#563316,#291a11);box-shadow:0 10px 30px #170f0a80;}
+.lobby-center h1 {font-size:44px;line-height:1.15;}
+.lobby-center p {font-size:22px;line-height:1.35;}
+.lobby-center .lobby-kicker {font-size:15px;letter-spacing:.12em;}
+#lobbyDifficulty {width:100%;margin:0;border:1px solid #ad824e;border-radius:12px;padding:16px;display:grid;gap:10px;}
+#lobbyDifficulty legend {font-size:19px;color:#ffe4b1;padding:0 8px;}
+#lobbyDifficulty button {width:100%;min-height:62px;}
+#lobbyStart,#lobbyBack {width:100%;min-height:64px;font-size:20px;}
+#lobbyStatus {font-size:22px;line-height:1.3;}
+
+/* V17 – quiz on the existing fixed 1920 x 1080 canvas. */
+#quizScreen{position:absolute;inset:0;z-index:181;overflow:hidden;color:#ffe9bd;font-family:Manrope,Arial,sans-serif;background:radial-gradient(ellipse at center,#925b29ec,#432719f5),url("assets/Map/BaseMap.png") center/cover;}
+#quizScreen[hidden]{display:none}
+.quiz-seat{position:absolute;width:650px;height:440px;transform:translate(-50%,-50%) rotate(var(--rotation));background:linear-gradient(155deg,#5b3518,#302016);border:2px solid #e5bd7b;border-top:10px solid var(--seat-color);border-radius:20px;box-shadow:0 8px 25px #1a0f0980;padding:14px 25px;display:flex;flex-direction:column;gap:7px;overflow:hidden;}
+.quiz-seat[data-seat="0"]{left:20%;top:75%;--rotation:0deg;--seat-color:#e7aa39}
+.quiz-seat[data-seat="1"]{left:80%;top:75%;--rotation:0deg;--seat-color:#4aa7a2}
+.quiz-seat[data-seat="2"]{left:20%;top:25%;--rotation:180deg;--seat-color:#929c4e}
+.quiz-seat[data-seat="3"]{left:80%;top:25%;--rotation:180deg;--seat-color:#5689b7}
+.quiz-seat.empty{opacity:.45;justify-content:center;align-items:center;border-style:dashed}
+.quiz-seat h2,.quiz-seat h3,.quiz-seat p{margin:0}
+.quiz-seat-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #c59c65;padding-bottom:8px;gap:10px}
+.quiz-seat-head h2{font-size:30px}.quiz-seat-head span{font-size:22px;white-space:nowrap}
+.quiz-question-number{font-size:18px;color:#e6c18b}.quiz-question-text{font-size:26px;line-height:1.2;min-height:32px;text-align:center}
+.quiz-image{width:100%;height:157px;object-fit:contain;flex:none;background:#ac784486;border-radius:8px}.quiz-text-space{flex:1;min-height:30px}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto}
+#quizScreen button{font:700 23px Manrope,Arial,sans-serif;min-height:48px;color:#ffe9bd;background:#77502b;border:1px solid #d6aa67;border-radius:9px;cursor:pointer;touch-action:manipulation;padding:7px 12px}
+#quizScreen button:disabled{cursor:default;opacity:.8}#quizScreen button.chosen{outline:3px solid #fff0c3;background:#a4773b}#quizScreen button.correct-option{background:#657337;border-color:#d6e19a}#quizScreen button:focus-visible{outline:3px solid white}
+.quiz-status{min-height:25px;font-size:19px;text-align:center;color:#f4d393}.quiz-message{font-size:36px;text-align:center;margin:auto!important}
+.quiz-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:440px;height:940px;background:#352113e8;border:2px solid #dbb475;border-radius:25px;padding:26px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;box-shadow:0 10px 30px #170f0a80}
+.quiz-center h1{font-size:42px;line-height:1.12;margin:0}.quiz-center h1 small{font-size:25px}.quiz-kicker{font-size:15px;letter-spacing:.1em;color:#d9af71;margin:0}
+#quizCenterBody{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;flex:1;width:100%}#quizCenterBody h2{font-size:27px;margin:0}#quizCenterBody p{font-size:24px;margin:0}#quizCountdown{font-size:66px;font-variant-numeric:tabular-nums}.quiz-ring{width:248px;height:248px;border-radius:50%;background:conic-gradient(#ffe5a2 var(--remaining,100%),#805d36 0);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;isolation:isolate}.quiz-ring:before{content:"";position:absolute;inset:12px;border-radius:50%;background:#422917;z-index:-1}.quiz-ring small{font-size:16px}.quiz-dots{display:flex;gap:10px}.quiz-dots span{width:16px;height:16px;border:2px solid #d9b475;border-radius:50%}.quiz-dots .filled{background:#ffe5a2}.quiz-answer{font-size:48px;font-weight:700}#quizExit{width:100%;min-height:60px!important}
+
+/* V17.1 — coordinated feedback, without moving the fixed seats. */
+.quiz-seat[data-feedback=fast]{border-color:#ffe39b;box-shadow:0 0 35px #ffd36b99;animation:quiz-win .65s ease-out;}
+.quiz-seat[data-feedback=correct]{border-color:#a9c77d;}
+.quiz-seat[data-feedback=wrong]{border-color:#e38e80;}
+.quiz-seat[data-feedback=none]{border-color:#ab9a85;}
+.quiz-seat[data-feedback=fast] .quiz-status{color:#ffe39b;font-weight:700;}
+.quiz-seat[data-feedback=correct] .quiz-status{color:#d1e6ac;}
+.quiz-seat[data-feedback=wrong] .quiz-status{color:#ffc0ad;}
+.quiz-seat[data-feedback=none] .quiz-status{color:#d0c0ab;}
+#quizScreen button.wrong-option{background:#864539;border-color:#f0a292;}
+.quiz-seat-head span{font-variant-numeric:tabular-nums;}
+.quiz-reveal-answer,.quiz-fastest-box,.quiz-fact,.quiz-next{width:100%;display:flex;flex-direction:column;align-items:center;gap:9px;}
+.quiz-fastest-box,.quiz-fact{border:1px solid #bc9458;border-radius:12px;background:#ffffff08;padding:14px;}
+.quiz-fastest-box.has-winner{background:#c58e3438;border-color:#ffe39b;animation:quiz-win .65s ease-out;}
+.quiz-fastest-box strong{font-size:24px;line-height:1.25;}
+#quizCenterBody:has(.quiz-fact){gap:15px;animation:quiz-appear .26s ease-out;}
+#quizCenterBody .quiz-fact p{font-size:20px;line-height:1.32;}
+.quiz-fact small,.quiz-fastest-box small,.quiz-next small{font-size:16px;color:#e5bd7b;}
+.quiz-next #quizCountdown{font-size:42px;line-height:1;}
+.quiz-reveal-answer .quiz-answer{font-size:38px;line-height:1.15;}
+@keyframes quiz-win{0%{box-shadow:0 0 0 #ffd36b00;}45%{box-shadow:0 0 42px #ffd36bcc;}100%{box-shadow:0 0 26px #ffd36b55;}}
+@keyframes quiz-appear{from{opacity:.25;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.quiz-seat,.quiz-fastest-box,#quizCenterBody{animation:none!important;}}
+
+/* V17.1.1 — reserve the feedback row; let artwork absorb height changes. */
+.quiz-seat:not(.empty) > .quiz-seat-head,
+.quiz-seat:not(.empty) > .quiz-question-number,
+.quiz-seat:not(.empty) > .quiz-question-text,
+.quiz-seat:not(.empty) > .quiz-options,
+.quiz-seat:not(.empty) > .quiz-status { flex: 0 0 auto; min-width: 0; }
+.quiz-seat > .quiz-image { flex: 1 1 0px; min-height: 0; height: auto; max-height: 157px; }
+.quiz-seat > .quiz-text-space { flex: 1 1 0px; min-height: 0; }
+.quiz-seat > .quiz-options { grid-template-columns: repeat(2,minmax(0,1fr)); }
+#quizScreen .quiz-options button { line-height: 1.2; white-space: normal; overflow-wrap: anywhere; }
+.quiz-seat > .quiz-status { min-height: 48px; padding: 2px 0; line-height: 1.25; display: grid; place-content: center; overflow-wrap: anywhere; }
+.quiz-seat > .quiz-question-text { overflow-wrap: anywhere; }
+
+
+/* V17.2 — final-round results, fixed four-player coordinates retained. */
+.quiz-seat.quiz-seat-results {gap:10px;align-items:stretch;justify-content:flex-start;animation:quiz-appear .35s ease-out;}
+.quiz-seat-results .quiz-seat-head{flex:0 0 auto;}
+.quiz-result-kicker{font-size:16px;letter-spacing:.11em;color:#f6d99e;text-align:center;font-weight:700;}
+.quiz-seat-results .quiz-result-kicker{margin-top:0;}
+.quiz-player-rank{font-size:38px;line-height:1;font-weight:800;text-align:center;color:#ffdf9c;}
+.quiz-seat-results[data-rank="1"] .quiz-player-rank{text-shadow:0 0 16px #ffcd75b5;}
+.quiz-player-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+.quiz-player-metric{background:#d6a85e1f;border:1px solid #bf915e;border-radius:8px;min-width:0;padding:10px 4px;text-align:center;display:flex;flex-direction:column;gap:4px;}
+.quiz-player-metric strong{font-size:28px;line-height:1.1;white-space:nowrap;}
+.quiz-player-metric span{font-size:13px;letter-spacing:.05em;color:#e9c99f;}
+.quiz-player-reward{display:flex;align-items:center;justify-content:center;gap:19px;min-width:0;margin-top:auto;margin-bottom:3px;}
+.quiz-reward-qr{width:100px;height:100px;flex:0 0 100px;border:4px dashed #b89459;background:#efe0bf;color:#583d23;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;transform:none!important;}
+.quiz-reward-qr strong{font-size:33px;line-height:1;}
+.quiz-reward-qr small{font-size:11px;letter-spacing:.05em;font-weight:700;}
+.quiz-reward-copy{display:flex;flex-direction:column;gap:8px;max-width:390px;min-width:0;overflow-wrap:anywhere;}
+.quiz-reward-copy strong{font-size:22px;line-height:1.2;}
+.quiz-reward-copy small{font-size:15px;color:#e8c59a;line-height:1.25;}
+#quizCenterBody:has(.quiz-final-title){gap:14px;justify-content:center;}
+.quiz-final-title{display:flex;align-items:center;flex-direction:column;gap:10px;width:100%;}
+#quizCenterBody .quiz-final-title h2{font-size:25px;line-height:1.15;}
+.quiz-final-champion{font-size:32px;color:#ffe19f;text-shadow:0 0 20px #edb85b70;line-height:1.25;overflow-wrap:anywhere;}
+#quizCenterBody .quiz-final-title p{font-size:18px;color:#dfbc86;}
+.quiz-podium{display:flex;flex-direction:column;gap:9px;width:100%;}
+.quiz-podium-entry{display:grid;grid-template-columns:48px 1fr;grid-template-rows:auto auto;align-items:center;column-gap:11px;padding:12px 14px;background:#99714431;border:1px solid #9d7848;border-radius:10px;text-align:left;}
+.quiz-podium-entry[data-rank="1"]{background:#b4863d5c;border-color:#ffda8c;box-shadow:0 0 16px #e7b25730;}
+.quiz-podium-entry span{grid-row:1/3;font-size:26px;font-weight:800;color:#ffdf9c;}
+.quiz-podium-entry strong{font-size:20px;line-height:1.2;}
+.quiz-podium-entry small{font-size:14px;line-height:1.3;color:#e4c598;}
+#quizCenterBody .quiz-ranking-note{font-size:13px;color:#d8b581;line-height:1.35;}
+.quiz-final-actions{width:100%;display:flex;flex-direction:column;gap:10px;}
+#quizScreen .quiz-final-actions button{font-size:19px;min-height:60px;}
+#quizScreen .quiz-final-actions .quiz-replay{color:#332416;background:#f3ca82;border-color:#ffe2a6;}
+#quizScreen .quiz-final-actions .quiz-return{background:#62452d;}
+@media(prefers-reduced-motion:reduce){.quiz-seat.quiz-seat-results{animation:none;}}
+
+/* V17.3: long bilingual question labels and options must not push feedback outside player card. */
+.quiz-seat > .quiz-question-number{font-size:15px;line-height:1.12;min-height:17px;white-space:normal;overflow-wrap:anywhere;}
+.quiz-seat > .quiz-question-text{font-size:clamp(17px,1.28vw,25px);line-height:1.16;min-height:0;max-height:65px;overflow:hidden;}
+.quiz-seat > .quiz-options button{min-height:46px;font-size:clamp(14px,.95vw,20px);line-height:1.13;padding:5px 7px;}
+.quiz-seat[dir="rtl"] .quiz-question-text,.quiz-seat[dir="rtl"] .quiz-question-number{unicode-bidi:plaintext;}
+.quiz-seat[dir="rtl"] .quiz-options button{text-align:center;}
+.quiz-seat > .quiz-image{max-height:130px;}
+
+
+/* ============================================================
+   V17.4 — APPROVED ARTWORK INTEGRATION (temporary map positions)
+   ============================================================ */
+#welcomeScreen { background-image:linear-gradient(90deg,#21170ee8,#21170e80),url('assets/Map/Empty Updated Map.png'); }
+#mapProgress { top:1.65%; right:1.9%; z-index:5; }
+#garageProgress { display:none; }
+.new-generation-marker { position:absolute; pointer-events:none; z-index:2; }
+.new-generation-marker img {position:absolute;display:block;pointer-events:none;object-fit:fill;}
+.new-generation-marker .new-marker-locked,.new-generation-marker .new-marker-unlocked {
+    transition:opacity .5s ease, transform .6s ease;
+}
+/* Scale around the FLAG anchor so opening the unlocked marker never shifts it. */
+.new-generation-marker .new-marker-unlocked {opacity:0; transform:scale(.94); transform-origin:19.15% 16.33%;}
+.new-generation-marker.is-collected .new-marker-unlocked {opacity:1;transform:scale(1);}
+.new-generation-marker.is-collected .new-marker-locked {opacity:0;}
+.new-generation-marker .next-car-hint { opacity:0; mix-blend-mode:screen; transition:opacity .35s; }
+.new-generation-marker.is-next .next-car-hint {opacity:.42; animation:next-patrol-pulse 2.4s ease-in-out infinite;}
+@keyframes next-patrol-pulse {0%,100%{opacity:.25}50%{opacity:.6}}
+.new-marker-button {position:absolute;pointer-events:auto;border:0;background:transparent;cursor:pointer;touch-action:manipulation;}
+.new-marker-button:focus-visible {outline:.2cqw solid #fff8dc;border-radius:50%;}
+.new-generation-marker.is-future .new-marker-button { cursor:not-allowed; }
+.new-game-marker { padding:0; border:0;background:none; }
+.new-game-marker img {display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;}
+.new-game-marker.new-game-marker.coming-soon span.new-coming-soon {
+    position:absolute;left:25%;top:36%;width:64%;height:23%;
+    font:700 .7cqw Manrope,Arial,sans-serif;display:grid;place-items:center;
+    background:#382a20eb;color:#ffe3aa;border-radius:.2cqw;pointer-events:none;
+}
+/* Vertical garage: seven real locked/unlocked rows, always newest to oldest. */
+#garageToggle {
+    left:auto;right:1.8%;top:auto;bottom:3.3%;width:16.35%;height:6.12%;
+    padding:0;overflow:hidden;border:0;background:transparent;border-radius:.32cqw;
+}
+#garageToggle>img {display:block;width:100%;height:100%;object-fit:fill;pointer-events:none;}
+#garageToggle .garage-live-count {
+    /* Keep this overlay clear of the graphic's built-in up-arrow (right 15%). */
+    position:absolute;left:20.25%;top:44%;width:62%;height:45%;
+    /* The source artwork is now text-free: no colour patch needed. */
+    background:transparent!important;color:#382313;font:700 .83cqw Manrope,Arial,sans-serif;
+    line-height:1.4;text-align:left;white-space:nowrap;pointer-events:none;
+    overflow:visible;
+}
+#garagePanel {
+    top:auto;bottom:9.4%;right:1.8%;width:16.35%;max-height:none;height:53.45%;
+    padding:0;overflow:hidden;border:none;border-radius:.36cqw;
+    background:#ffe1a5;box-shadow:0 .5cqw 2cqw #3923096a;
+    transform:translateY(.5cqw);font-family:Manrope,Arial,sans-serif;
+    display:flex;flex-direction:column;
+}
+#garagePanel.open {transform:translateY(0);}
+/* Once all seven are collected, give the reward control its own row. */
+#garagePanel.has-reward { height:60%; }
+#garageCollection {display:flex;flex-direction:column;gap:0;min-height:0;flex:1;padding:.42cqw .5cqw 0;}
+.garage-generation-row { flex:1;min-height:0;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #e6bf81; }
+.garage-generation-row img {display:block;width:100%;height:100%;object-fit:contain;object-position:center;}
+.garage-panel-footer {flex:0 0 11.4%;display:flex;align-items:center;gap:.4cqw;padding:0 .55cqw;color:#382313;}
+.garage-footer-logo {width:13%;height:80%;object-fit:contain;}
+.garage-panel-footer>div {display:flex;flex-direction:column;min-width:0;flex:1;}
+.garage-panel-footer span {font-size:.61cqw;letter-spacing:.16em;}
+.garage-panel-footer strong {font-size:.83cqw;white-space:nowrap;}
+#garageClose {color:#382313;font-size:1.35cqw;line-height:1;}
+#garageReward {
+    position:static;order:1;flex:0 0 auto;align-self:center;
+    width:90%;margin:.25cqw 0;font-size:.7cqw;
+    padding:.4cqw .25cqw;line-height:1.25;
+}
+.garage-panel-footer {order:2;}
+#garageCollection {order:0;}
+#garagePanel.has-reward #garageCollection {padding-top:.22cqw;}
+/* New clean map already contains the language control, keep reset discreet. */
+#mapContainer #resetButton {bottom:11.2%;left:1.8%;opacity:.7;}
+@media(prefers-reduced-motion:reduce) {.new-generation-marker.is-next .next-car-hint{animation:none;opacity:.4;}}
+
+/* V17.6.1 — Figma-specified top-right counter typography at 1920px.
+   Container units scale the Figma values together with the map. */
+@font-face {
+    font-family: 'Manrope';
+    src: url('assets/Fonts/Manrope-ExtraBold.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+}
+#mapProgress {
+    top: 2.05%;
+    right: 1.82%;
+    display: flex;
+    align-items: center;
+    gap: 1.45cqw;
+    color: #382313;
+    font-family: 'Manrope', Arial, sans-serif;
+    white-space: nowrap;
+}
+#mapProgress #progress {
+    font-family: 'Manrope', Arial, sans-serif;
+    font-weight: 800;
+    font-size: 2.708333333cqw; /* 52px at 1920px */
+    line-height: 1;
+    letter-spacing: 0;
+    color: inherit;
+    font-variant-numeric: normal;
+    font-feature-settings: normal;
+}
+#mapProgress #progressLabel {
+    font-family: 'Manrope', Arial, sans-serif;
+    font-weight: 700;
+    font-size: .885416667cqw; /* 17px at 1920px */
+    line-height: .9375cqw; /* 18px at 1920px */
+    letter-spacing: .052083333cqw; /* 1px at 1920px */
+    text-align: left;
+}
+
+/* V17.6.2 — Opaque garage interior for readability over the map.
+   Preserve the existing hidden state; only force opacity when open. */
+#garagePanel {
+    background: #ffe1a5 !important;
+    background-image: none !important;
+    background-color: #ffe1a5 !important;
+    isolation: isolate;
+}
+#garagePanel.open {
+    opacity: 1 !important;
+}
+/* Garage row artwork contains transparent regions; these now show the solid panel. */
+#garageCollection,
+.garage-panel-footer {
+    background-color: #ffe1a5;
+}
+
+
+/* V17.6.5 — Next Car To Unlock: pulse centred ON THE CAR, not on the flag.
+   The hint position is set in PatrolMapFunction.js using boxMarker(). */
+.new-generation-marker .next-car-hint {
+    opacity: 0;
+    mix-blend-mode: normal;
+    pointer-events: none;
+    transform-origin: center center;
+    transition: opacity .35s ease;
+    filter: brightness(1.6)
+            drop-shadow(0 0 12px rgba(255,255,255,.9))
+            drop-shadow(0 0 25px rgba(255,255,255,.65));
+}
+.new-generation-marker.is-next .next-car-hint {
+    opacity: 1;
+    animation: next-car-body-glow 2s ease-in-out infinite;
+}
+@keyframes next-car-body-glow {
+    0%, 100% { opacity: .15; transform: scale(.98); }
+    50% { opacity: 1; transform: scale(1.05); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .new-generation-marker.is-next .next-car-hint {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* V18 — four-corner Generation Match, self-contained visuals */
+#generationMatchScreen{position:absolute;inset:0;z-index:182;overflow:hidden;color:#ffe6b3;font-family:Manrope,Arial,sans-serif;background:linear-gradient(135deg,#78491fdd,#492919e9),url('assets/Map/Empty Updated Map.png') center/cover no-repeat;}
+#generationMatchScreen[hidden]{display:none}
+.gm-seat{position:absolute;left:20%;top:75%;width:685px;height:448px;transform:translate(-50%,-50%) rotate(var(--rotation,0deg));transform-origin:center;background:linear-gradient(160deg,#57341b,#342014);border:2px solid #e5ba74;border-top:9px solid var(--gm-seat-color);border-radius:20px;padding:14px 20px;box-shadow:0 9px 28px #1a0c0880;display:flex;flex-direction:column;align-items:stretch;gap:8px;overflow:hidden;}
+.gm-seat[data-seat="0"]{left:20%;top:75%;--rotation:0deg}.gm-seat[data-seat="1"]{left:80%;top:75%;--rotation:0deg}.gm-seat[data-seat="2"]{left:20%;top:25%;--rotation:180deg}.gm-seat[data-seat="3"]{left:80%;top:25%;--rotation:180deg}
+.gm-seat.empty{opacity:.42;align-items:center;justify-content:center;border-style:dashed}.gm-seat.empty h2{font-size:36px}
+.gm-seat-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:0 0 33px;border-bottom:1px solid #b38b5c;padding-bottom:6px;}
+.gm-seat-head h2{font-size:27px;margin:0;line-height:1.1;white-space:nowrap}.gm-seat-score{font-size:15px;white-space:nowrap;font-weight:700}
+.gm-source-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:repeat(2,70px);gap:5px;flex:0 0 auto;}
+#generationMatchScreen .gm-tile{position:relative;min-width:0;width:100%;height:70px;padding:2px;border:2px solid #e5c99c;border-radius:9px;background:#e9c79c;cursor:grab;touch-action:none;user-select:none;box-shadow:0 2px 3px #1f130850;}
+#generationMatchScreen .gm-tile img{width:100%;height:100%;object-fit:contain;pointer-events:none;}
+#generationMatchScreen .gm-tile.selected{border-color:#fff;box-shadow:0 0 0 3px #ffde83;}
+#generationMatchScreen .gm-tile-placed{opacity:.17;cursor:default;}
+.gm-instruction{text-align:center;font-size:14px;font-weight:700;font-style:italic;letter-spacing:.04em;line-height:18px;color:#f4d49f;white-space:nowrap;}
+.gm-targets{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;flex:1 1 auto;min-height:0;}
+.gm-generation{border:1px solid #b99062;border-radius:8px;padding:4px;display:flex;flex-direction:column;align-items:stretch;text-align:center;gap:4px;min-width:0;}
+.gm-generation strong{font-size:14px;line-height:1.05;white-space:nowrap}.gm-generation small{font-size:12px;color:#efc995;line-height:1.05;}
+#generationMatchScreen .gm-drop{height:49px;flex:1 1 auto;min-height:35px;border:1px solid #9e7747;border-radius:6px;background:#573a21;color:#d7b67d;font-size:20px;font-weight:700;padding:1px;touch-action:manipulation;cursor:pointer;}
+#generationMatchScreen .gm-drop.filled{background:#e4c394;border-color:#ffe6ae;}
+.gm-drop img{width:100%;height:100%;object-fit:contain;pointer-events:none;}
+.gm-feedback{margin:0;min-height:20px;font-size:13px;font-weight:700;text-align:center;color:#ffe4ae;}
+#generationMatchScreen button:focus-visible{outline:3px solid white;outline-offset:2px}
+#generationMatchScreen .gm-tile.gm-dragging{position:fixed!important;left:0;top:0;width:82px;height:80px;z-index:99999;pointer-events:none;transform:translate(-50%,-50%);opacity:.9;box-shadow:0 0 20px #fff8c2;background:#ffdbab;}
+.gm-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:435px;height:955px;border:2px solid #e2b777;border-radius:23px;background:#382314ee;display:flex;flex-direction:column;align-items:center;text-align:center;padding:20px 18px;gap:12px;box-shadow:0 9px 25px #1e0c0877;}
+.gm-kicker{font-size:12px;letter-spacing:.08em;color:#d6ab6f;margin:0}.gm-center h1{font-size:37px;line-height:1.12;margin:0;letter-spacing:.07em;}
+#gmCenterBody{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;flex:1;min-height:0;}
+.gm-counter{display:grid;place-items:center;font-size:97px;line-height:1;font-weight:800;letter-spacing:-.04em;width:257px;height:257px;flex:0 0 257px;border-radius:50%;border:10px solid #f0c885;background:#5a351c;box-shadow:0 0 26px #edb65c60,inset 0 0 30px #200e0c;}
+.gm-counter-label{font-size:20px;letter-spacing:.1em;margin:-3px 0 0;}
+.gm-center-message{font-size:20px;font-weight:800;line-height:1.25;text-align:center;color:#ffdd9b;}
+.gm-rank-list{display:flex;flex-direction:column;gap:9px;width:100%;}
+.gm-rank-row{border:1px solid #bd8d4b;border-radius:8px;padding:9px 8px;font-size:17px;background:#6e4625;font-weight:700;}
+.gm-center-note{font-size:14px;line-height:1.3;color:#e8c695;margin:0;}
+#gmExit{margin-top:auto;border:1px solid #ab8754;background:#56391f;border-radius:8px;color:#ffdb9a;font:700 15px Manrope,Arial,sans-serif;padding:9px 18px;cursor:pointer;}
+.gm-waiting{align-items:center;justify-content:center}.gm-waiting h3{font-size:40px}
+.gm-result-seat{align-items:center;justify-content:flex-start;gap:10px;text-align:center;}
+.gm-finish-badge{font-size:23px;font-weight:800;color:#ffcf7b}.gm-result-medal{font-family:Georgia,serif;font-size:75px;font-weight:900;color:#ffd26f;line-height:1;text-shadow:0 0 25px #ffd06d9a}
+.gm-final-time{font-size:42px;line-height:1;color:#fff0ce;}
+.gm-finish-detail{font-size:19px}.gm-reward-row{height:0}.gm-qr-placeholder{margin-top:3px;background:#efdfbd;color:#513620;border:2px dashed #c39450;border-radius:8px;width:140px;height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;}
+.gm-qr-placeholder strong{font-size:27px;line-height:1}.gm-qr-placeholder small{font-size:10px}.gm-reward-caption{font-size:13px;color:#dabb86}
+.gm-champion{font-size:27px;line-height:1.2;margin:0;color:#ffe2a6}.gm-champion-time{font-size:52px;font-weight:800;color:#ffdf8d}
+#generationMatchScreen .gm-main-action,#generationMatchScreen .gm-secondary-action{font:800 19px Manrope,Arial,sans-serif;border-radius:9px;padding:13px 15px;border:1px solid #f6d59b;cursor:pointer;width:100%;min-height:58px;background:#e8bf79;color:#392716;}
+#generationMatchScreen .gm-secondary-action{background:#634326;color:#fce0aa;border-color:#a7804c;}
+@media(prefers-reduced-motion:reduce){.gm-tile{animation:none!important}}
+/* Drag preview lives outside the scaled game canvas so it follows the pointer. */
+.gm-tile.gm-dragging{position:fixed!important;z-index:999999!important;width:82px!important;height:80px!important;padding:2px!important;border:3px solid #fff1c5!important;border-radius:10px!important;pointer-events:none!important;transform:translate(-50%,-50%);background:#e9c79c!important;box-shadow:0 0 25px #ffe1a8b0!important;}
+.gm-tile.gm-dragging img{display:block;width:100%;height:100%;object-fit:contain;}
+
+
+/* ==============================
+   ACHIEVEMENT UNLOCK MODAL
+============================== */
+
+.achievement-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 95;
+    display: grid;
+    place-items: center;
+    padding: 32px;
+    background: rgba(8, 6, 4, 0.64);
+    backdrop-filter: blur(3px);
+}
+
+.achievement-modal[hidden] {
+    display: none !important;
+}
+
+.achievement-shell {
+    position: relative;
+    width: min(720px, 88vw);
+    display: grid;
+    justify-items: center;
+    gap: 16px;
+    color: #fff6db;
+    text-align: center;
+    filter: drop-shadow(0 22px 48px rgba(0,0,0,.48));
+}
+
+.achievement-dismiss {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    z-index: 2;
+    border: none;
+    background: transparent;
+    color: #f8eac4;
+    font: 400 54px/1 Manrope, Arial, sans-serif;
+    cursor: pointer;
+}
+
+.achievement-visual {
+    position: relative;
+    width: 760px;
+    height: 600px;
+    display: grid;
+    place-items: center;
+    overflow: visible;
+}
+
+.achievement-rays-wrap {
+    position: absolute;
+    width: 860px;
+    height: 860px;
+    display: grid;
+    place-items: center;
+    overflow: visible;
+}
+
+/* The supplied 2048px stroke has transparent margins: its visible glow
+   occupies roughly the central 51% of the PNG. Render the full square
+   larger so the visible circle surrounds the badge without cropping. */
+.achievement-rays {
+    position: absolute;
+    width: 1400px;
+    height: 1400px;
+    max-width: none;
+    max-height: none;
+    object-fit: contain;
+    opacity: .95;
+    transform-origin: 50% 50%;
+    animation: achievement-rotate 18s linear infinite;
+}
+
+.achievement-arc {
+    position: absolute;
+    top: 6px;
+    width: 78%;
+    height: auto;
+}
+
+.achievement-badge-wrap {
+    position: relative;
+    width: 430px;
+    height: 455px;
+    display: grid;
+    place-items: center;
+}
+
+.achievement-badge {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.achievement-vehicle {
+    position: absolute;
+    width: 102%;
+    max-width: 420px;
+    max-height: 345px;
+    object-fit: contain;
+    object-position: center center;
+    left: 50%;
+    top: 51%;
+    transform: translate(-50%, -50%);
+}
+
+.achievement-copy {
+    margin-top: -36px;
+    display: grid;
+    gap: 6px;
+}
+
+.achievement-kicker,
+.achievement-ordinal,
+#achievementUnlockedTitle {
+    margin: 0;
+    color: #fff6db;
+    font-family: Manrope, Arial, sans-serif;
+    text-transform: uppercase;
+}
+
+.achievement-kicker {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 2.8px;
+}
+
+#achievementUnlockedTitle {
+    font-size: 31px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    line-height: 1.1;
+}
+
+.achievement-ordinal {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 2.2px;
+}
+
+.achievement-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 8px;
+}
+
+.achievement-actions button {
+    min-width: 230px;
+    min-height: 58px;
+    padding: 0 24px;
+    border-radius: 2px;
+    font: 800 16px/1 Manrope, Arial, sans-serif;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.achievement-primary {
+    border: 1px solid #dca841;
+    background: linear-gradient(180deg, #f0cf6c 0%, #e5b340 100%);
+    color: #2f210b;
+}
+
+.achievement-secondary {
+    border: 2px solid rgba(248, 234, 196, 0.76);
+    background: rgba(40, 24, 8, 0.18);
+    color: #fff6db;
+}
+
+@keyframes achievement-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .achievement-rays { animation: none; }
+}
+
+.achievement-close-only { min-width: 240px; }
+
+
+/* ============================================================
+   V18.1.3 — ACHIEVEMENT POPUP REFINEMENT
+   - Larger badge and vehicle, centred together
+   - Decorative rotating art never intercepts taps/clicks
+   - Close controls always sit above the decoration
+   ============================================================ */
+
+.achievement-shell {
+    width: 820px;
+    max-width: 92%;
+    gap: 8px;
+    isolation: isolate;
+}
+
+.achievement-visual {
+    width: 800px;
+    height: 650px;
+    max-width: 100%;
+    pointer-events: none;
+}
+
+/* The transparent parts of the 2048px PNG have no interaction area. */
+.achievement-rays-wrap,
+.achievement-rays,
+.achievement-arc,
+.achievement-badge-wrap,
+.achievement-badge,
+.achievement-vehicle {
+    pointer-events: none !important;
+    user-select: none;
+}
+
+.achievement-badge-wrap {
+    width: 550px;
+    height: 595px;
+    max-width: none;
+    z-index: 1;
+    transform: translateY(22px);
+}
+
+.achievement-badge {
+    object-fit: contain;
+}
+
+.achievement-vehicle {
+    width: 100%;
+    max-width: 525px;
+    height: 78%;
+    max-height: 455px;
+    left: 50%;
+    top: 49%;
+    object-fit: contain;
+    object-position: center;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.achievement-arc {
+    width: 72%;
+    top: 0;
+    z-index: 2;
+}
+
+.achievement-copy {
+    margin-top: -24px;
+    position: relative;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.achievement-dismiss,
+.achievement-actions {
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+.achievement-dismiss {
+    position: absolute;
+    z-index: 11;
+}
+
+.achievement-actions button {
+    position: relative;
+    z-index: 11;
+    pointer-events: auto;
+    touch-action: manipulation;
+}
+
+
+/* =======================================================================
+   V18.1.4 — DUAL-ORIENTATION SHARED GAME CENTRE
+   Both halves show the SAME live state. The upper half is turned 180deg.
+   The 4 player corner cards retain their original positions and rotation.
+   ======================================================================= */
+.quiz-center.dual-center,
+.gm-center.dual-center {
+  padding: 7px 10px;
+  gap: 0;
+  justify-content: stretch;
+  align-items: stretch;
+  overflow: hidden;
+}
+.dual-center-half {
+  position: relative;
+  flex: 1 1 50%;
+  height: 50%;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  padding: 7px 10px;
+  overflow: hidden;
+}
+.dual-center-top { border-bottom: 1px solid rgba(239, 195, 120, .72); }
+.dual-center-orient {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  transform: rotate(180deg);
+}
+.dual-center .quiz-kicker, .dual-center .gm-kicker { font-size: 10px; line-height: 1.1; }
+.dual-center h1 { font-size: 20px; line-height: 1.1; margin: 0; flex-shrink: 0; }
+.dual-center h1 small { font-size: 12px; }
+.dual-center .dual-mirror-body,
+.dual-center #quizCenterBody,
+.dual-center #gmCenterBody {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  overflow: hidden;
+}
+.dual-center .dual-mirror-body > *,
+.dual-center #quizCenterBody > *,
+.dual-center #gmCenterBody > * { flex-shrink: 0; }
+.dual-center #quizCenterBody h2, .dual-center .dual-mirror-body h2,
+.dual-center #gmCenterBody h2 { font-size: 16px; line-height: 1.15; }
+.dual-center #quizCenterBody p, .dual-center .dual-mirror-body p,
+.dual-center #gmCenterBody p { font-size: 13px; line-height: 1.2; }
+.dual-center .quiz-ring {
+  width: 148px;
+  height: 148px;
+  flex: 0 0 148px;
+}
+.dual-center .quiz-ring:before { inset: 8px; }
+.dual-center #quizCountdown, .dual-center .dual-live-counter {font-size: 39px;line-height:1;}
+.dual-center .quiz-ring small { font-size: 11px; }
+.dual-center .quiz-dots { gap: 5px; }
+.dual-center .quiz-dots span { width: 9px; height: 9px; }
+.dual-center .quiz-reveal-answer,
+.dual-center .quiz-fastest-box,
+.dual-center .quiz-fact,
+.dual-center .quiz-next { gap: 3px; }
+.dual-center .quiz-answer { font-size: 25px; }
+.dual-center .quiz-fastest-box,
+.dual-center .quiz-fact { padding: 5px 9px; border-radius: 7px; }
+.dual-center .quiz-fastest-box strong { font-size: 17px; }
+.dual-center .quiz-fact p, .dual-center #quizCenterBody .quiz-fact p {font-size: 12px; line-height: 1.17;}
+.dual-center .quiz-fact small,
+.dual-center .quiz-fastest-box small,
+.dual-center .quiz-next small { font-size: 11px; }
+.dual-center #quizCenterBody:has(.quiz-fact),
+.dual-center .dual-mirror-body:has(.quiz-fact) { gap: 5px; }
+.dual-center .quiz-next #quizCountdown { font-size: 28px; }
+.dual-center .quiz-final-title {gap: 3px;}
+.dual-center .quiz-final-title h2 { font-size: 17px; }
+.dual-center .quiz-final-champion {font-size: 18px;}
+.dual-center .quiz-final-title p {font-size: 12px;}
+.dual-center .quiz-podium {gap: 3px;}
+.dual-center .quiz-podium-entry {grid-template-columns: 31px 1fr;gap:3px;padding:4px 8px;border-radius:5px;}
+.dual-center .quiz-podium-entry span {font-size: 17px;}
+.dual-center .quiz-podium-entry strong {font-size: 13px;}
+.dual-center .quiz-podium-entry small {font-size: 10px;}
+.dual-center #quizCenterBody .quiz-ranking-note,
+.dual-center .quiz-ranking-note {font-size: 10px;}
+.dual-center .quiz-final-actions {flex-direction:row;gap:6px;}
+#quizScreen .dual-center .quiz-final-actions button {font-size: 11px;min-height:35px;padding:4px;}
+.dual-center .gm-counter {
+  width: 148px;
+  height: 148px;
+  flex: 0 0 148px;
+  border-width: 6px;
+  font-size: 59px;
+}
+.dual-center .gm-counter-label {font-size: 12px;}
+.dual-center .gm-center-message {font-size: 14px;}
+.dual-center .gm-rank-list {gap: 3px;}
+.dual-center .gm-rank-row {font-size: 12px;padding: 4px 6px;}
+.dual-center .gm-center-note {font-size: 10px;line-height: 1.18;}
+.dual-center .gm-champion {font-size: 17px;}
+.dual-center .gm-champion-time {font-size: 24px;}
+#generationMatchScreen .dual-center .gm-main-action,
+#generationMatchScreen .dual-center .gm-secondary-action {font-size: 12px;min-height: 33px;padding: 5px;}
+.dual-center .dual-exit {
+  margin-top: auto;
+  flex-shrink: 0;
+  width: 100%;
+  min-height: 30px!important;
+  padding: 3px 6px!important;
+  font-size: 11px!important;
+  border: 1px solid #ba975e;
+  border-radius: 6px;
+  background: #5b3c22;
+  color: #ffe5ad;
+  cursor: pointer;
+}
+#quizScreen .dual-center #quizExit,
+#quizScreen .dual-center #quizExitMirror {
+  width:100%; min-height:30px!important;
+}
+
+/* ======================================================================
+   V18.1.5 — ADAPTIVE GAME PANELS
+   Applies to both Legacy Quiz and Generation Match, based on the actual
+   occupied seats. CSS is authored against the fixed 1920x1080 kiosk canvas.
+   The top row always faces 180deg; the bottom row faces 0deg.
+   ====================================================================== */
+#quizScreen .dual-center-half[hidden],
+#generationMatchScreen .dual-center-half[hidden] { display: none !important; }
+
+/* One side occupied: maximise the legible central panel opposite the boards. */
+#quizScreen[data-adaptive-side="bottom"] .quiz-center,
+#generationMatchScreen[data-adaptive-side="bottom"] .gm-center {
+  left: 50%; top: 20%; width: 1000px; height: 400px;
+}
+#quizScreen[data-adaptive-side="top"] .quiz-center,
+#generationMatchScreen[data-adaptive-side="top"] .gm-center {
+  left: 50%; top: 80%; width: 1000px; height: 400px;
+}
+#quizScreen[data-adaptive-side="top"] .dual-center-top,
+#generationMatchScreen[data-adaptive-side="top"] .dual-center-top,
+#quizScreen[data-adaptive-side="bottom"] .dual-center-bottom,
+#generationMatchScreen[data-adaptive-side="bottom"] .dual-center-bottom {
+  flex: 1 1 100%; height: 100%; width: 100%; border: 0;
+}
+/* Use the centre panel's full available width rather than squeezing its text. */
+#quizScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center-half,
+#generationMatchScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center-half { padding: 5px 18px; }
+#quizScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center-half > .dual-center-orient {
+  justify-content: center;
+}
+#quizScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center-half .dual-mirror-body,
+#quizScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center-half #quizCenterBody,
+#generationMatchScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center-half .dual-mirror-body,
+#generationMatchScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center-half #gmCenterBody {
+  gap: 3px;
+}
+#quizScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center h1,
+#generationMatchScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center h1 { font-size: 20px; }
+#quizScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center .quiz-ring {width: 90px;height: 90px;flex-basis:90px;}
+#generationMatchScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center .gm-counter {width: 92px;height:92px;flex-basis:92px;font-size:46px;}
+#quizScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center .quiz-fact {padding:3px 10px;}
+#quizScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center .quiz-podium {width:90%;}
+#generationMatchScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center .gm-rank-list {width:90%;}
+
+/* One player: single large board on their own side, facing them. */
+#quizScreen[data-adaptive-count="1"] .quiz-seat,
+#generationMatchScreen[data-adaptive-count="1"] .gm-seat {
+  left: 50% !important; width: 1280px; height: 610px;
+}
+#quizScreen[data-adaptive-count="1"][data-adaptive-side="bottom"] .quiz-seat,
+#generationMatchScreen[data-adaptive-count="1"][data-adaptive-side="bottom"] .gm-seat { top: 71% !important; }
+#quizScreen[data-adaptive-count="1"][data-adaptive-side="top"] .quiz-seat,
+#generationMatchScreen[data-adaptive-count="1"][data-adaptive-side="top"] .gm-seat { top: 29% !important; }
+#quizScreen[data-adaptive-count="1"] .quiz-seat > .quiz-image {max-height:245px;}
+#quizScreen[data-adaptive-count="1"] .quiz-seat > .quiz-question-text {max-height:100px;font-size:27px;}
+#quizScreen[data-adaptive-count="1"] .quiz-seat > .quiz-options button {min-height:62px;font-size:22px;}
+#generationMatchScreen[data-adaptive-count="1"] .gm-source-grid {grid-template-rows: repeat(2,100px);}
+#generationMatchScreen[data-adaptive-count="1"] .gm-tile {height:100px;}
+#generationMatchScreen[data-adaptive-count="1"] .gm-generation strong {font-size:20px;}
+#generationMatchScreen[data-adaptive-count="1"] .gm-generation small {font-size:17px;}
+
+/* Two players on the same side: use both large bottom OR top stations. */
+#quizScreen[data-adaptive-count="2"]:not([data-adaptive-side="both"]) .quiz-seat,
+#generationMatchScreen[data-adaptive-count="2"]:not([data-adaptive-side="both"]) .gm-seat {
+  width: 850px; height: 570px;
+}
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="bottom"] .quiz-seat,
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="bottom"] .gm-seat {top: 72% !important;}
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="top"] .quiz-seat,
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="top"] .gm-seat {top: 28% !important;}
+#quizScreen[data-adaptive-count="2"]:not([data-adaptive-side="both"]) .quiz-seat[data-seat="0"],
+#quizScreen[data-adaptive-count="2"]:not([data-adaptive-side="both"]) .quiz-seat[data-seat="2"],
+#generationMatchScreen[data-adaptive-count="2"]:not([data-adaptive-side="both"]) .gm-seat[data-seat="0"],
+#generationMatchScreen[data-adaptive-count="2"]:not([data-adaptive-side="both"]) .gm-seat[data-seat="2"] {left:26% !important;}
+#quizScreen[data-adaptive-count="2"]:not([data-adaptive-side="both"]) .quiz-seat[data-seat="1"],
+#quizScreen[data-adaptive-count="2"]:not([data-adaptive-side="both"]) .quiz-seat[data-seat="3"],
+#generationMatchScreen[data-adaptive-count="2"]:not([data-adaptive-side="both"]) .gm-seat[data-seat="1"],
+#generationMatchScreen[data-adaptive-count="2"]:not([data-adaptive-side="both"]) .gm-seat[data-seat="3"] {left:74% !important;}
+
+/* Mixed sides: retain dual orientation in the centre; only show occupied corners. */
+#quizScreen[data-adaptive-side="both"] .quiz-center,
+#generationMatchScreen[data-adaptive-side="both"] .gm-center {
+  left: 50%; top: 50%; width: 435px; height: 955px;
+}
+/* Expand remaining live boards modestly without crossing the centre. */
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-seat {width:730px;height:475px;}
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-seat {width:740px;height:475px;}
+#quizScreen[data-adaptive-count="3"] .quiz-seat {width:710px;height:465px;}
+#generationMatchScreen[data-adaptive-count="3"] .gm-seat {width:710px;height:465px;}
+
+/* ======================================================================
+   V18.1.6 — EXPANDED-BOARD LAYOUT EXPERIMENT
+   ---------------------------------------------------------------
+   One player: distribute final results across the enlarged board.
+   Two players on opposite sides: fill the empty table width with two
+   wide boards, while keeping the shared readout fully legible on the right.
+
+   Experimental settings to revise after client review:
+   - wide board: 1300 x 485, horizontal centre 35.5%
+   - mirrored info column: 435 wide, centre x 85.0%
+   Both games use the same seat coordinates and orientation unchanged.
+   ====================================================================== */
+
+/* TWO PLAYERS, OPPOSITE SIDES ONLY: preserve top/bottom viewing directions. */
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-seat,
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-seat {
+    left: 35.5% !important;
+    width: 1300px;
+    height: 485px;
+}
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-seat[data-seat="0"],
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-seat[data-seat="1"],
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-seat[data-seat="0"],
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-seat[data-seat="1"] {
+    top: 75% !important;
+}
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-seat[data-seat="2"],
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-seat[data-seat="3"],
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-seat[data-seat="2"],
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-seat[data-seat="3"] {
+    top: 25% !important;
+}
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-center,
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-center {
+    left: 85% !important;
+    top: 50% !important;
+    width: 435px;
+    height: 955px;
+}
+/* Make the actual play elements benefit from the wider board. */
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-seat > .quiz-image {
+    max-height: 175px;
+    width: 100%;
+    object-fit: contain;
+}
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-seat > .quiz-question-text {font-size: 26px;max-height:85px;}
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-seat > .quiz-options button {font-size:21px;min-height:55px;}
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-source-grid {grid-template-rows:repeat(2,80px);}
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-tile {height:80px;}
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-generation strong {font-size:19px;}
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-generation small {font-size:16px;}
+
+/* ONE PLAYER OR TWO OPPOSITE PLAYERS: landscape Generation Match results. */
+#generationMatchScreen[data-adaptive-count="1"] .gm-result-seat,
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-result-seat {
+    display: grid;
+    grid-template-columns: minmax(0, .94fr) minmax(0, 1.06fr);
+    grid-template-rows: auto auto auto auto auto auto;
+    align-content: center;
+    align-items: center;
+    justify-items: center;
+    gap: 10px 28px;
+    padding: 28px 55px;
+    text-align: center;
+}
+#generationMatchScreen[data-adaptive-count="1"] .gm-result-seat .gm-seat-head,
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-result-seat .gm-seat-head {
+    grid-column: 1 / -1;
+    width: 100%;
+    align-self: stretch;
+}
+#generationMatchScreen[data-adaptive-count="1"] .gm-result-seat .gm-result-medal,
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-result-seat .gm-result-medal {
+    grid-column: 1;
+    grid-row: 2 / 7;
+    display: grid;
+    place-items: center;
+    width: min(310px, 100%);
+    height: 280px;
+    border: 7px solid #f5cd80;
+    border-radius: 26px;
+    background: radial-gradient(circle at 50% 34%, #a77730 0%, #5d381b 55%, #3c2519 100%);
+    box-shadow: 0 0 33px #e7b15b52, inset 0 0 35px #281507;
+    font-size: 133px;
+    line-height: 1;
+}
+#generationMatchScreen[data-adaptive-count="1"] .gm-result-seat .gm-finish-badge,
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-result-seat .gm-finish-badge {
+    grid-column: 2; grid-row: 2;
+    font-size: 25px;
+}
+#generationMatchScreen[data-adaptive-count="1"] .gm-result-seat .gm-final-time,
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-result-seat .gm-final-time {
+    grid-column: 2; grid-row: 3;
+    font-size: 68px;
+    font-weight: 800;
+    text-shadow: 0 0 20px #eeb85050;
+}
+#generationMatchScreen[data-adaptive-count="1"] .gm-result-seat .gm-finish-detail,
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-result-seat .gm-finish-detail {
+    grid-column: 2; grid-row: 4;
+    font-size: 21px;
+}
+#generationMatchScreen[data-adaptive-count="1"] .gm-result-seat .gm-reward-row,
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-result-seat .gm-reward-row {display:none;}
+#generationMatchScreen[data-adaptive-count="1"] .gm-result-seat .gm-qr-placeholder,
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-result-seat .gm-qr-placeholder {
+    grid-column: 2; grid-row: 5;
+    width: 170px; height: 75px;
+    margin: 0;
+}
+#generationMatchScreen[data-adaptive-count="1"] .gm-result-seat .gm-reward-caption,
+#generationMatchScreen[data-adaptive-count="2"][data-adaptive-side="both"] .gm-result-seat .gm-reward-caption {
+    grid-column: 2; grid-row: 6;
+    font-size: 15px;
+}
+
+/* Legacy Quiz final results: give the unused left half a proper rank feature. */
+#quizScreen[data-adaptive-count="1"] .quiz-seat-results,
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-seat-results {
+    display: grid;
+    grid-template-columns: minmax(0,.9fr) minmax(0,1.1fr);
+    grid-template-rows: auto auto auto auto;
+    align-content: center;
+    align-items: center;
+    gap: 18px 30px;
+    padding: 28px 48px;
+}
+#quizScreen[data-adaptive-count="1"] .quiz-seat-results .quiz-seat-head,
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-seat-results .quiz-seat-head {grid-column:1 / -1;grid-row:1;}
+#quizScreen[data-adaptive-count="1"] .quiz-seat-results .quiz-result-kicker,
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-seat-results .quiz-result-kicker {grid-column:1 / -1;grid-row:2;font-size:20px;}
+#quizScreen[data-adaptive-count="1"] .quiz-seat-results .quiz-player-rank,
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-seat-results .quiz-player-rank {
+    grid-column:1;grid-row:3 / 5;
+    display:grid;place-content:center;
+    border:6px solid #f5cd80;border-radius:25px;
+    background:radial-gradient(circle at center,#91672d,#3b2518 76%);
+    box-shadow:0 0 30px #e7b15b54;
+    min-height:230px;
+    font-size:100px;
+}
+#quizScreen[data-adaptive-count="1"] .quiz-seat-results .quiz-player-metrics,
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-seat-results .quiz-player-metrics {grid-column:2;grid-row:3;align-self:stretch;width:100%;}
+#quizScreen[data-adaptive-count="1"] .quiz-seat-results .quiz-player-reward,
+#quizScreen[data-adaptive-count="2"][data-adaptive-side="both"] .quiz-seat-results .quiz-player-reward {
+    grid-column:2;grid-row:4;
+    margin:0;justify-content:center;
+}
+
+
+/* ======================================================================
+   V18.1.7 — DISPLAY SCALING + TEMPORARY MAP-ONLY UTILITIES
+   The 1920 × 1080 canvas keeps vehicle positioning and game geometry exact.
+   The ResponsiveDisplay controller fits the canvas to the available device.
+   Never stretch the #mapImage to arbitrary aspect ratios.
+   ====================================================================== */
+
+#mapContainer .map-utility-controls {
+    position: absolute;
+    z-index: 25;
+    bottom: 1.7%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    pointer-events: auto;
+    white-space: nowrap;
+}
+
+#mapContainer .map-utility-controls[hidden] { display: none !important; }
+
+/* Override old reset positioning: both controls share one map-only row. */
+#mapContainer #resetButton,
+#mapContainer #fullscreenButton {
+    position: relative;
+    inset: auto;
+    bottom: auto;
+    left: auto;
+    opacity: 1;
+    min-width: 126px;
+    min-height: 45px;
+    padding: 10px 16px;
+    background: rgba(54, 34, 18, .94);
+    border: 1.5px solid #ebc383;
+    border-radius: 8px;
+    box-shadow: 0 3px 16px rgba(0, 0, 0, .28);
+    color: #ffebc1;
+    font: 800 15px/1 Manrope, Arial, sans-serif;
+    letter-spacing: 1px;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+#mapContainer #fullscreenButton {
+    background: rgba(255, 229, 166, .96);
+    color: #4b321d;
+}
+
+#mapContainer .map-utility-controls button:hover { filter: brightness(1.12); }
+#mapContainer .map-utility-controls button:focus-visible {
+    outline: 4px solid white;
+    outline-offset: 3px;
+}
+
+/* Preserve physical device readability wherever the normal canvas fits.
+   Fixed-angle four-player layouts always retain their required proportions. */
+html[data-device-mode="tablet-landscape"] #mapContainer .map-utility-controls button,
+html[data-device-mode="desktop-compact"] #mapContainer .map-utility-controls button {
+    min-height: 56px;
+    min-width: 150px;
+    font-size: 18px;
+}
+
+/* Small portrait screens can show the app, but their four-sided table game
+   controls will be compact; the non-interactive hint explains this upfront. */
+#portraitOrientationHint {
+    position: fixed;
+    z-index: 250;
+    bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(94vw, 390px);
+    padding: 12px 18px;
+    border-radius: 10px;
+    background: rgba(34, 23, 14, .96);
+    border: 1px solid #d6ab6c;
+    box-shadow: 0 6px 24px rgba(0,0,0,.38);
+    color: #ffe8c0;
+    font: 700 13px/1.4 Manrope, Arial, sans-serif;
+    text-align: center;
+    pointer-events: none;
+}
+#portraitOrientationHint[hidden] { display: none !important; }
+
+/* ======================================================================
+   V18.1.8 — SHARED CENTRE LEGIBILITY
+   This is a presentation-only patch. The two orientations still mirror a
+   single game state; no question, timer, score, or drag logic is changed.
+   Scale remains owned by the 1920 × 1080 kiosk stage.
+   ====================================================================== */
+
+/* Use vertical space for game information instead of repeated small captions. */
+#quizScreen .dual-center-half,
+#generationMatchScreen .dual-center-half {
+    gap: 3px;
+    padding: 6px 9px;
+}
+#quizScreen .dual-center-orient,
+#generationMatchScreen .dual-center-orient { gap: 3px; }
+#quizScreen .dual-center .quiz-kicker,
+#generationMatchScreen .dual-center .gm-kicker {
+    font-size: 12px;
+    line-height: 1.12;
+    letter-spacing: .03em;
+}
+#quizScreen .dual-center h1,
+#generationMatchScreen .dual-center h1 {
+    font-size: 24px;
+    line-height: 1.1;
+    letter-spacing: .03em;
+}
+#quizScreen .dual-center h1 small {font-size: 14px;}
+
+/* Stronger hierarchy in both mirrored live-information bodies. */
+#quizScreen .dual-center .dual-mirror-body,
+#quizScreen .dual-center #quizCenterBody,
+#generationMatchScreen .dual-center .dual-mirror-body,
+#generationMatchScreen .dual-center #gmCenterBody {
+    gap: 5px;
+}
+#quizScreen .dual-center .dual-mirror-body h2,
+#quizScreen .dual-center #quizCenterBody h2,
+#generationMatchScreen .dual-center .dual-mirror-body h2,
+#generationMatchScreen .dual-center #gmCenterBody h2 {
+    font-size: 20px;
+    line-height: 1.15;
+}
+#quizScreen .dual-center .dual-mirror-body p,
+#quizScreen .dual-center #quizCenterBody p,
+#generationMatchScreen .dual-center .dual-mirror-body p,
+#generationMatchScreen .dual-center #gmCenterBody p {
+    font-size: 15px;
+    line-height: 1.23;
+}
+
+/* Legacy Quiz: counter, answer reveal, heritage explanation and rankings. */
+.dual-center #quizCountdown,
+.dual-center .dual-live-counter {font-size: 49px;}
+.dual-center .quiz-ring small {font-size: 13px;}
+.dual-center .quiz-answer {font-size: 31px;}
+.dual-center .quiz-fastest-box strong {font-size: 20px;}
+.dual-center .quiz-fastest-box small,
+.dual-center .quiz-fact small,
+.dual-center .quiz-next small {font-size: 13px;}
+.dual-center .quiz-fact p,
+.dual-center #quizCenterBody .quiz-fact p {font-size: 15px;line-height:1.18;}
+.dual-center .quiz-fastest-box,
+.dual-center .quiz-fact {padding:5px 8px;}
+.dual-center .quiz-final-title h2 {font-size: 21px;}
+.dual-center .quiz-final-champion {font-size: 23px;}
+.dual-center .quiz-final-title p {font-size: 15px;}
+.dual-center .quiz-podium-entry {padding: 3px 7px;gap:3px;}
+.dual-center .quiz-podium-entry strong {font-size: 16px;}
+.dual-center .quiz-podium-entry small {font-size: 12px;}
+.dual-center #quizCenterBody .quiz-ranking-note,
+.dual-center .quiz-ranking-note {font-size: 12px;line-height: 1.15;}
+#quizScreen .dual-center .quiz-final-actions button {font-size: 14px;min-height:38px;padding:5px;}
+
+/* Generation Match: make the timer, standings and feedback easier to read. */
+.dual-center .gm-counter {font-size: 69px;}
+.dual-center .gm-counter-label {font-size: 15px;}
+.dual-center .gm-center-message {font-size: 18px;}
+.dual-center .gm-rank-row {font-size: 15px;padding:4px 6px;}
+.dual-center .gm-center-note {font-size: 13px;line-height: 1.22;}
+.dual-center .gm-champion {font-size: 21px;}
+.dual-center .gm-champion-time {font-size: 30px;}
+#generationMatchScreen .dual-center .gm-main-action,
+#generationMatchScreen .dual-center .gm-secondary-action {font-size: 14px;min-height:38px;padding:5px;}
+.dual-center .dual-exit {font-size: 13px!important;min-height:36px!important;}
+
+/* A single occupied side has a full-width, single-orientation display. */
+#quizScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center .quiz-ring {
+    width: 116px;
+    height: 116px;
+    flex-basis: 116px;
+}
+#generationMatchScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center .gm-counter {
+    width: 116px;
+    height: 116px;
+    flex-basis: 116px;
+    font-size: 58px;
+}
+#quizScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center h1,
+#generationMatchScreen[data-adaptive-side]:not([data-adaptive-side="both"]) .dual-center h1 {font-size: 26px;}
+
+/* Keep long English/Arabic content contained rather than clipped sideways. */
+.dual-center .dual-mirror-body,
+.dual-center #quizCenterBody,
+.dual-center #gmCenterBody {overflow-wrap: anywhere;}
+
+
+/* V18.1.9: Stable quiz choice lettering in Arabic / RTL player stations.
+   The A-D marker and translated answer are separate text elements, so Unicode
+   bidi reordering cannot move the letter or its separator across the option. */
+#quizScreen .quiz-options .quiz-option-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: .35em;
+    min-width: 0;
+    direction: ltr;
+}
+#quizScreen .quiz-options .quiz-option-letter {
+    direction: ltr;
+    unicode-bidi: isolate;
+    white-space: nowrap;
+    flex: 0 0 auto;
+}
+#quizScreen .quiz-options .quiz-option-text {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    unicode-bidi: isolate;
+}
+#quizScreen .quiz-seat[dir="rtl"] .quiz-options .quiz-option-button {
+    flex-direction: row-reverse; /* letter stays on the RIGHT */
+}
+#quizScreen .quiz-seat[dir="rtl"] .quiz-options .quiz-option-text {
+    direction: rtl;
+    text-align: right;
+}

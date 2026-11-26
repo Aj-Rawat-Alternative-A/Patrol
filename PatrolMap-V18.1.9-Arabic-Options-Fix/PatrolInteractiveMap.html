@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Patrol Legacy – 75 Years</title>
+
+    <!-- Main stylesheet (see index at its top for feature locations) -->
+    <link rel="stylesheet" href="Map-Container.css">
+
+    <!-- Load order matters: session > map > heritage > lobby > game modules -->
+    <script src="JavaScript Codes/AppController.js" defer></script>
+    <script src="JavaScript Codes/ResponsiveDisplay.js" defer></script>
+    <script src="JavaScript Codes/PatrolMapFunction.js" defer></script>
+    <script src="JavaScript Codes/HeritageController.js" defer></script>
+    <script src="JavaScript Codes/GameLobbyController.js" defer></script>
+    <script src="JavaScript Codes/QuizQuestions.js" defer></script>
+    <script src="JavaScript Codes/DualCenterDisplay.js" defer></script>
+    <script src="JavaScript Codes/AdaptiveGameLayout.js" defer></script>
+    <script src="JavaScript Codes/QuizController.js" defer></script>
+    <script src="JavaScript Codes/GenerationMatchController.js" defer></script>
+</head>
+
+<body>
+    <div id="kioskStage">
+
+    <!-- INTERACTIVE MAP: seven generations, progress, dynamic vertical garage -->
+    <main id="app">
+
+        <div id="mapViewport">
+
+            <div id="mapContainer">
+
+                <img
+                    id="mapImage"
+                    src="assets/Map/Empty Updated Map.png"
+                    alt="Patrol Legacy Interactive Map"
+                >
+
+                <div id="hotspotLayer"></div>
+                <div id="mapProgress" aria-live="polite">
+                    <strong id="progress">00/07</strong>
+                    <span id="progressLabel">COLLECT ALL<br>GENERATIONS</span>
+                </div>
+                
+                <button id="garageToggle" type="button" aria-label="Open My Garage" aria-expanded="false" aria-controls="garagePanel"><img src="assets/NewMap/Garage (Empty)Closed-Clean.png" alt="" draggable="false"><span class="garage-live-count" id="garageToggleCount">0 of 7 Patrols unlocked</span></button>
+                <section id="garagePanel" aria-label="My Garage" inert>
+                    <div id="garageCollection" aria-label="Generations from newest to oldest"></div>
+                    <div class="garage-panel-footer">
+                       <img class="garage-footer-logo" src="assets/NewMap/Garage Logo.png" alt="" draggable="false">
+                       <div><span>MY GARAGE</span><strong id="garageSummary">0 of 7 Patrols unlocked</strong></div>
+                       <button id="garageClose" type="button" aria-label="Close My Garage">⌄</button>
+                    </div>
+                    <button id="garageReward" type="button" hidden>View collection reward</button>
+                </section>
+                <!-- TEMPORARY DISPLAY CONTROLS: visible on the interactive map only -->
+                <div id="mapUtilityControls" class="map-utility-controls" hidden>
+                    <button id="resetButton" type="button" aria-label="Reset collected Patrol progress">RESET</button>
+                    <button id="fullscreenButton" type="button" aria-label="Enter fullscreen" aria-pressed="false">FULLSCREEN</button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <section id="welcomeScreen" aria-label="Welcome to Patrol Legacy">
+        <div class="welcome-content">
+            <p class="welcome-kicker">NISSAN PATROL</p>
+            <h1>75 YEARS<br>OF LEGACY</h1>
+            <p>Seven generations. One extraordinary journey.</p>
+            <button id="touchToStart" type="button">TOUCH TO START <span aria-hidden="true">→</span></button>
+        </div>
+    </section>
+
+    <!-- HERITAGE: intro, optional video, long-form scroll experience -->
+    <section id="heritageIntro" class="v12-overlay" hidden aria-label="Generation introduction" role="dialog" aria-modal="true">
+      <div class="v12-intro"><button id="introClose" class="v12-close" type="button" aria-label="Close">×</button><p>FIRST GENERATION · 1951–1960</p><img src="assets/Cars/4W60.png" alt="4W60"><h1>4W60</h1><h2>Where the legend began</h2><p>Discover the rugged four-wheel-drive vehicle that began the Patrol story in 1951.</p><p id="introProgress" aria-live="polite"></p><div class="v12-buttons"><button id="introVideo" type="button">▶ Watch video (optional)</button><button id="introExplore" type="button">Explore heritage →</button></div></div>
+    </section>
+    <section id="heritageVideoScreen" class="v12-overlay" hidden role="dialog" aria-modal="true" aria-label="Optional heritage video"><div class="v12-video"><button id="videoBack" type="button">← Back</button><h2>4W60 · Heritage film</h2><video id="heritageVideo" controls playsinline preload="metadata"></video><p id="videoMessage" aria-live="polite">Optional video. Watching is not required to collect the Patrol.</p></div></section>
+    <section id="heritageScreen" hidden aria-label="Patrol heritage">
+      <header class="heritage-header"><button id="heritageBack" type="button">← Back to introduction</button><span>NISSAN PATROL · 75 YEARS OF LEGACY</span></header>
+      <article class="heritage-scroll" id="heritageScroll" tabindex="0" aria-label="Scroll through the 4W60 story">
+        <div class="heritage-story">
+          <div class="story-hero"><div><p class="story-kicker">FIRST GENERATION · 1951–1960</p><h1>4W60</h1><h2>Where the legend began</h2><p>Discover the rugged four-wheel-drive vehicle that began the Patrol story in 1951.</p></div><img src="assets/Cars/4W60.png" alt="Nissan Patrol 4W60"></div>
+          <div id="heritageBody"></div>
+          <p id="heritageNotice">Prototype content · Nissan archive approval pending.</p>
+          <footer class="story-end" id="heritageEnd"><img src="assets/Cars/4W60.png" alt=""><h2>The beginning of your collection</h2><p>Add the first generation to My Garage.</p><button id="heritageCollect" type="button" disabled>Collect 4W60</button></footer>
+        </div>
+      </article>
+    </section>
+    <!-- MULTIPLAYER: shared four-corner lobby -->
+    <section id="gameLobby" hidden aria-label="Multiplayer game lobby" role="dialog" aria-modal="true">
+      <div id="lobbySeats"></div>
+      <main class="lobby-center">
+        <p class="lobby-kicker">NISSAN PATROL · 75 YEARS OF LEGACY</p>
+        <h1 id="lobbyTitle"></h1>
+        <p id="lobbyInstructions">Join from your side of the table. Choose your language and mark yourself ready.</p>
+        <p class="lobby-ar" lang="ar" dir="rtl">انضم من جهتك من الطاولة، واختر لغتك ثم اضغط جاهز.</p>
+        <fieldset id="lobbyDifficulty"><legend>Shared difficulty / مستوى الصعوبة</legend>
+          <button type="button" data-difficulty="entry" aria-pressed="true">Entry / مبتدئ</button>
+          <button type="button" data-difficulty="medium" aria-pressed="false">Medium / متوسط</button>
+          <button type="button" data-difficulty="expert" aria-pressed="false">Expert / خبير</button>
+        </fieldset>
+        <div id="lobbyStatus" aria-live="polite"></div>
+        <button id="lobbyStart" type="button" disabled>Start game / ابدأ اللعبة</button>
+        <button id="lobbyBack" type="button">Return to map / العودة إلى الخريطة</button>
+      </main>
+    </section>
+    <!-- GAME 1: Legacy Quiz -->
+    <section id="quizScreen" hidden role="dialog" aria-modal="true" aria-label="Patrol Legacy Quiz"><div id="quizSeats"></div><main class="quiz-center dual-center" aria-label="Shared quiz information readable from both ends of the table">
+        <section class="dual-center-half dual-center-top" aria-label="Shared quiz display facing players 3 and 4">
+          <div class="dual-center-orient">
+            <p class="quiz-kicker">NISSAN PATROL · 75 YEARS OF LEGACY</p>
+            <h1>LEGACY QUIZ <small lang="ar">اختبار إرث باترول</small></h1>
+            <div id="quizCenterMirror" class="dual-mirror-body" aria-live="off"></div>
+            <button id="quizExitMirror" class="dual-exit" type="button">Return to map / العودة إلى الخريطة</button>
+          </div>
+        </section>
+        <section class="dual-center-half dual-center-bottom" aria-label="Shared quiz display facing players 1 and 2">
+          <p class="quiz-kicker">NISSAN PATROL · 75 YEARS OF LEGACY</p>
+          <h1>LEGACY QUIZ <small lang="ar">اختبار إرث باترول</small></h1>
+          <div id="quizCenterBody" aria-live="polite"></div>
+          <button id="quizExit" class="dual-exit" type="button">Return to map / العودة إلى الخريطة</button>
+        </section>
+      </main></section>
+    <!-- GAME 2: Generation Match -->
+    <section id="generationMatchScreen" hidden role="dialog" aria-modal="true" aria-label="Patrol Generation Match"><div id="gmSeats"></div><main class="gm-center dual-center" aria-label="Shared Generation Match information readable from both ends of the table">
+        <section class="dual-center-half dual-center-top" aria-label="Shared match display facing players 3 and 4">
+          <div class="dual-center-orient">
+            <p class="gm-kicker">NISSAN PATROL · 75 YEARS OF LEGACY</p>
+            <h1>GENERATION MATCH</h1>
+            <div id="gmCenterMirror" class="dual-mirror-body" aria-live="off"></div>
+            <button id="gmExitMirror" class="dual-exit" type="button">Return to map / العودة إلى الخريطة</button>
+          </div>
+        </section>
+        <section class="dual-center-half dual-center-bottom" aria-label="Shared match display facing players 1 and 2">
+          <p class="gm-kicker">NISSAN PATROL · 75 YEARS OF LEGACY</p>
+          <h1>GENERATION MATCH</h1>
+          <div id="gmCenterBody" aria-live="polite"></div>
+          <button id="gmExit" class="dual-exit" type="button">Return to map / العودة إلى الخريطة</button>
+        </section>
+      </main></section>
+    <!-- Activity modal -->
+    <div id="activityModal" class="modal">
+
+        <div class="modal-content">
+
+            <h2 id="activityTitle">Activity</h2>
+
+            <p id="activityDescription"></p>
+
+            <button id="finishActivity" type="button">
+                Complete Activity
+            </button>
+
+            <button id="closeActivity" type="button">
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Vehicle unlock celebration -->
+    <section id="achievementModal" class="achievement-modal" hidden role="dialog" aria-modal="true" aria-labelledby="achievementUnlockedTitle">
+        <div class="achievement-shell">
+            <button id="achievementDismissIcon" class="achievement-dismiss" type="button" aria-label="Close">×</button>
+            <div class="achievement-visual" aria-hidden="true">
+                <div class="achievement-rays-wrap">
+                    <img class="achievement-rays" src="assets/UnlockPopup/Eclipse Stroke.png" alt="" draggable="false">
+                </div>
+                <img class="achievement-arc" src="assets/UnlockPopup/Achievement Unlocked.png" alt="" draggable="false">
+                <div class="achievement-badge-wrap">
+                    <img class="achievement-badge" src="assets/UnlockPopup/Achievement Badge.png" alt="" draggable="false">
+                    <img id="achievementVehicleImage" class="achievement-vehicle" src="" alt="" draggable="false">
+                </div>
+            </div>
+            <div class="achievement-copy">
+                <p class="achievement-kicker">CONGRATULATIONS! YOU'VE</p>
+                <h2 id="achievementUnlockedTitle">UNLOCKED A PATROL 4W60</h2>
+                <p id="achievementUnlockedOrdinal" class="achievement-ordinal">[1ST GEN].</p>
+            </div>
+            <div class="achievement-actions">
+                <button id="achievementClose" class="achievement-primary achievement-close-only" type="button">CLOSE</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Collection completion: reward destination is not yet approved. -->
+    <section id="rewardModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="rewardTitle">
+        <div class="reward-content">
+            <div class="reward-sparks" aria-hidden="true"></div>
+            <header class="reward-heading">
+                <p class="reward-kicker">NISSAN PATROL · 75 YEARS OF LEGACY</p>
+                <p class="reward-count">07 / 07</p>
+                <h2 id="rewardTitle">Congratulations!</h2>
+                <p>Seven generations. One legendary collection.</p>
+            </header>
+            <div id="rewardCollection" aria-label="All seven collected Patrols"></div>
+            <div class="reward-bottom">
+                <div class="reward-qr" role="img" aria-label="QR code placeholder, not scannable"><span>QR</span><small>PLACEHOLDER</small></div>
+                <div class="reward-copy"><h3>Your collection is complete</h3><p>You've explored 75 years of Patrol heritage.</p><p class="reward-pending">Reward QR coming soon. Redemption is not active in this prototype.</p></div>
+                <button id="closeReward" type="button">Return to Map →</button>
+            </div>
+        </div>
+    </section>
+    </div>
+</body>
+</html>
